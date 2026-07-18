@@ -1,0 +1,631 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Natal",
+        "regiaoId": "REG-VII",
+        "populacao": 890000,
+        "isCapital": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.230, -5.750],
+            [-35.200, -5.750],
+            [-35.185, -5.780],
+            [-35.190, -5.830],
+            [-35.215, -5.880],
+            [-35.240, -5.850],
+            [-35.250, -5.800],
+            [-35.230, -5.750]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parnamirim",
+        "regiaoId": "REG-VII",
+        "populacao": 265000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.240, -5.850],
+            [-35.215, -5.880],
+            [-35.220, -5.930],
+            [-35.250, -5.960],
+            [-35.280, -5.940],
+            [-35.290, -5.900],
+            [-35.260, -5.870],
+            [-35.240, -5.850]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Macaíba",
+        "regiaoId": "REG-VII",
+        "populacao": 82000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.400, -5.820],
+            [-35.330, -5.830],
+            [-35.290, -5.900],
+            [-35.280, -5.940],
+            [-35.320, -5.950],
+            [-35.380, -5.920],
+            [-35.420, -5.870],
+            [-35.400, -5.820]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "São Gonçalo do Amarante",
+        "regiaoId": "REG-VII",
+        "populacao": 103000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.350, -5.730],
+            [-35.290, -5.750],
+            [-35.250, -5.800],
+            [-35.260, -5.870],
+            [-35.330, -5.830],
+            [-35.370, -5.780],
+            [-35.350, -5.730]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Extremoz",
+        "regiaoId": "REG-VII",
+        "populacao": 29000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.290, -5.660],
+            [-35.230, -5.670],
+            [-35.200, -5.710],
+            [-35.230, -5.750],
+            [-35.290, -5.750],
+            [-35.310, -5.700],
+            [-35.290, -5.660]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ceará-Mirim",
+        "regiaoId": "REG-VII",
+        "populacao": 74000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.450, -5.580],
+            [-35.330, -5.590],
+            [-35.290, -5.660],
+            [-35.310, -5.700],
+            [-35.350, -5.730],
+            [-35.420, -5.690],
+            [-35.450, -5.580]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "São José de Mipibu",
+        "regiaoId": "REG-I",
+        "populacao": 44000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.290, -5.900],
+            [-35.280, -5.940],
+            [-35.250, -5.960],
+            [-35.220, -5.930],
+            [-35.180, -6.000],
+            [-35.180, -6.150],
+            [-35.250, -6.180],
+            [-35.320, -6.100],
+            [-35.320, -5.950],
+            [-35.290, -5.900]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Goianinha",
+        "regiaoId": "REG-I",
+        "populacao": 26000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.250, -6.180],
+            [-35.180, -6.150],
+            [-35.140, -6.230],
+            [-35.150, -6.320],
+            [-35.230, -6.330],
+            [-35.300, -6.250],
+            [-35.250, -6.180]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Canguaretama",
+        "regiaoId": "REG-I",
+        "populacao": 34000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.180, -6.150],
+            [-35.100, -6.150],
+            [-35.050, -6.250],
+            [-35.000, -6.420],
+            [-35.150, -6.440],
+            [-35.150, -6.320],
+            [-35.140, -6.230],
+            [-35.180, -6.150]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nova Cruz",
+        "regiaoId": "REG-I",
+        "populacao": 37000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.450, -6.250],
+            [-35.300, -6.250],
+            [-35.230, -6.330],
+            [-35.150, -6.320],
+            [-35.150, -6.440],
+            [-35.350, -6.550],
+            [-35.530, -6.480],
+            [-35.500, -6.350],
+            [-35.450, -6.250]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "João Câmara",
+        "regiaoId": "REG-III",
+        "populacao": 35000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-36.000, -5.400],
+            [-35.800, -5.400],
+            [-35.650, -5.450],
+            [-35.680, -5.600],
+            [-35.850, -5.720],
+            [-36.050, -5.650],
+            [-36.000, -5.400]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Touros",
+        "regiaoId": "REG-III",
+        "populacao": 33000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-35.650, -5.450],
+            [-35.630, -5.150],
+            [-35.400, -5.020],
+            [-35.250, -5.150],
+            [-35.330, -5.590],
+            [-35.450, -5.580],
+            [-35.650, -5.450]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Santa Cruz",
+        "regiaoId": "REG-V",
+        "populacao": 40000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-36.200, -6.100],
+            [-35.950, -6.080],
+            [-35.800, -6.200],
+            [-35.850, -6.350],
+            [-36.150, -6.380],
+            [-36.250, -6.250],
+            [-36.200, -6.100]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lajes",
+        "regiaoId": "REG-V",
+        "populacao": 11000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-36.500, -5.600],
+            [-36.200, -5.600],
+            [-36.050, -5.650],
+            [-35.850, -5.720],
+            [-35.950, -6.080],
+            [-36.200, -6.100],
+            [-36.450, -5.900],
+            [-36.500, -5.600]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Caicó",
+        "regiaoId": "REG-IV",
+        "populacao": 68000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-37.250, -6.300],
+            [-37.000, -6.300],
+            [-36.950, -6.450],
+            [-37.000, -6.600],
+            [-37.200, -6.650],
+            [-37.300, -6.500],
+            [-37.250, -6.300]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Currais Novos",
+        "regiaoId": "REG-IV",
+        "populacao": 45000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-36.700, -6.150],
+            [-36.450, -6.150],
+            [-36.350, -6.300],
+            [-36.400, -6.420],
+            [-36.650, -6.380],
+            [-36.700, -6.250],
+            [-36.700, -6.150]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parelhas",
+        "regiaoId": "REG-IV",
+        "populacao": 21000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-36.750, -6.500],
+            [-36.550, -6.480],
+            [-36.500, -6.650],
+            [-36.680, -6.750],
+            [-36.800, -6.650],
+            [-36.750, -6.500]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Jucurutu",
+        "regiaoId": "REG-IV",
+        "populacao": 18000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-37.400, -5.900],
+            [-37.150, -5.920],
+            [-37.050, -6.080],
+            [-37.200, -6.200],
+            [-37.380, -6.150],
+            [-37.400, -5.900]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Açu",
+        "regiaoId": "REG-VIII",
+        "populacao": 58000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-37.100, -5.450],
+            [-36.800, -5.450],
+            [-36.700, -5.620],
+            [-36.850, -5.800],
+            [-37.100, -5.750],
+            [-37.100, -5.450]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Macau",
+        "regiaoId": "REG-VIII",
+        "populacao": 32000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-36.800, -5.100],
+            [-36.500, -5.050],
+            [-36.500, -5.250],
+            [-36.750, -5.350],
+            [-36.800, -5.100]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Angicos",
+        "regiaoId": "REG-VIII",
+        "populacao": 12000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-36.750, -5.500],
+            [-36.500, -5.550],
+            [-36.450, -5.720],
+            [-36.700, -5.750],
+            [-36.750, -5.500]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Guamaré",
+        "regiaoId": "REG-VIII",
+        "populacao": 15000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-36.500, -5.050],
+            [-36.200, -5.080],
+            [-36.250, -5.300],
+            [-36.480, -5.280],
+            [-36.500, -5.050]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Mossoró",
+        "regiaoId": "REG-II",
+        "populacao": 300000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-37.500, -5.050],
+            [-37.200, -5.080],
+            [-37.200, -5.350],
+            [-37.550, -5.350],
+            [-37.500, -5.050]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apodi",
+        "regiaoId": "REG-II",
+        "populacao": 36000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-38.000, -5.500],
+            [-37.650, -5.520],
+            [-37.600, -5.800],
+            [-37.950, -5.820],
+            [-38.000, -5.500]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Baraúna",
+        "regiaoId": "REG-II",
+        "populacao": 28000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-37.750, -5.000],
+            [-37.500, -5.050],
+            [-37.550, -5.250],
+            [-37.780, -5.200],
+            [-37.750, -5.000]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Areia Branca",
+        "regiaoId": "REG-II",
+        "populacao": 27000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-37.250, -4.900],
+            [-37.050, -4.920],
+            [-37.100, -5.100],
+            [-37.300, -5.050],
+            [-37.250, -4.900]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pau dos Ferros",
+        "regiaoId": "REG-VI",
+        "populacao": 31000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-38.400, -6.000],
+            [-38.100, -6.020],
+            [-38.100, -6.200],
+            [-38.350, -6.250],
+            [-38.400, -6.000]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Patu",
+        "regiaoId": "REG-VI",
+        "populacao": 12000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-37.850, -6.000],
+            [-37.550, -6.020],
+            [-37.500, -6.200],
+            [-37.800, -6.220],
+            [-37.850, -6.000]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Alexandria",
+        "regiaoId": "REG-VI",
+        "populacao": 13000
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-38.200, -6.300],
+            [-37.900, -6.320],
+            [-37.950, -6.500],
+            [-38.180, -6.480],
+            [-38.200, -6.300]
+          ]
+        ]
+      }
+    }
+  ]
+}

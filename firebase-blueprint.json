@@ -1,0 +1,49 @@
+{
+  "entities": {
+    "pharmacovigilance_report": {
+      "title": "Pharmacovigilance Report",
+      "description": "Report of a pharmacovigilance incident or adverse reaction.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 100 },
+        "medicamento": { "type": "string", "maxLength": 100 },
+        "lote": { "type": "string", "maxLength": 50 },
+        "reacaoAdversa": { "type": "string", "maxLength": 1000 },
+        "gravidade": { "type": "string", "enum": ["Leve", "Moderada", "Grave"] },
+        "unidadeNotificante": { "type": "string", "maxLength": 150 },
+        "data": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["Em Investigação", "Arquivado", "Confirmado"] },
+        "createdBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["medicamento", "lote", "reacaoAdversa", "gravidade", "unidadeNotificante", "data", "status", "createdBy"]
+    },
+    "user_settings": {
+      "title": "User Settings",
+      "description": "Application settings and configurations saved per user.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "horusUrl": { "type": "string", "maxLength": 256 },
+        "horusEnabled": { "type": "boolean" },
+        "pgeUrl": { "type": "string", "maxLength": 256 },
+        "pgeEnabled": { "type": "boolean" },
+        "unicatUrl": { "type": "string", "maxLength": 256 },
+        "unicatEnabled": { "type": "boolean" },
+        "suvisaUrl": { "type": "string", "maxLength": 256 },
+        "suvisaEnabled": { "type": "boolean" },
+        "syncFrequency": { "type": "string", "enum": ["realtime", "hourly", "daily", "weekly"] }
+      },
+      "required": ["uid"]
+    }
+  },
+  "firestore": {
+    "/pharmacovigilance/{reportId}": {
+      "schema": "pharmacovigilance_report",
+      "description": "Collection of pharmacovigilance reports submitted by users"
+    },
+    "/settings/{userId}": {
+      "schema": "user_settings",
+      "description": "Collection of configurations stored on a per-user basis"
+    }
+  }
+}

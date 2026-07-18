@@ -1,0 +1,8 @@
+{
+  "name": "Observatório da Assistência Farmacêutica",
+  "description": "Sistema de inteligência para gestão, previsão de desabastecimento e controle de assistência farmacêutica.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
