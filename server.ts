@@ -195,17 +195,18 @@ async function startServer() {
   // 7. Rota de Inteligência Artificial para Consulta em Linguagem Natural
   app.post("/api/ai/query", async (req, res) => {
     try {
-      const { query, geminiApiKey } = req.body;
+      const { query } = req.body;
 
       if (!query) {
         return res.status(400).json({ error: "A pergunta (query) é obrigatória." });
       }
 
       // Obter chave de API
-      let apiKey = geminiApiKey || process.env.GEMINI_API_KEY;
+      // A chave fica somente no servidor (variável de ambiente); nunca é aceita do cliente.
+      const apiKey = process.env.GEMINI_API_KEY;
       if (apiKey === "MY_GEMINI_API_KEY" || !apiKey || apiKey.trim() === "") {
         return res.json({
-          response: `**[Nota Operacional - Modo Offline/Sem Chave]**\n\nIdentificamos que a chave de API do Gemini não está configurada no painel de Secrets ou contém o valor padrão.\n\nContudo, como um assistente especialista estruturado, aqui está o comportamento esperado para a sua pergunta: *"${query}"*:\n\n1. **Identificação da Unidade e Medicamento**: O sistema mapearia os termos da pergunta.\n2. **Execução SQL Equivalente**:\n   \`\`\`sql\n   SELECT m.nome, i.nome, e.quantidade, e.demanda_mensal, \n          ROUND(e.quantidade / (e.demanda_mensal / 30.0), 1) as dias_cobertura\n   FROM estoques e\n   JOIN medicamentos m ON e.medicamento_id = m.id\n   JOIN instituicoes i ON e.instituicao_id = i.id\n   WHERE m.nome ILIKE '%insulina%'\n     OR i.nome ILIKE '%Asa Norte%';\n   \`\`\`\n3. **Resposta Analítica**: A insulina no HRAN (Hospital Regional da Asa Norte) está atualmente com **Estoques Críticos** (150 unidades contra demanda mensal de 1200), restando apenas **3,7 dias de cobertura**. Há risco eminente de desabastecimento total se uma nova transferência ou compra não for concluída esta semana.\n\n*Por favor, adicione uma chave Gemini API válida em **Configurações > Gerenciamento de Credenciais** para obter a geração de insights do modelo em tempo real.*`
+          response: `**[Nota Operacional - Modo Offline/Sem Chave]**\n\nIdentificamos que a chave de API do Gemini não está configurada no painel de Secrets ou contém o valor padrão.\n\nContudo, como um assistente especialista estruturado, aqui está o comportamento esperado para a sua pergunta: *"${query}"*:\n\n1. **Identificação da Unidade e Medicamento**: O sistema mapearia os termos da pergunta.\n2. **Execução SQL Equivalente**:\n   \`\`\`sql\n   SELECT m.nome, i.nome, e.quantidade, e.demanda_mensal, \n          ROUND(e.quantidade / (e.demanda_mensal / 30.0), 1) as dias_cobertura\n   FROM estoques e\n   JOIN medicamentos m ON e.medicamento_id = m.id\n   JOIN instituicoes i ON e.instituicao_id = i.id\n   WHERE m.nome ILIKE '%insulina%'\n     OR i.nome ILIKE '%Asa Norte%';\n   \`\`\`\n3. **Resposta Analítica**: A insulina no HRAN (unidade de exemplo) está atualmente com **Estoques Críticos** (150 unidades contra demanda mensal de 1200), restando apenas **3,7 dias de cobertura**. Há risco eminente de desabastecimento total se uma nova transferência ou compra não for concluída esta semana.\n\n*Para ativar a IA em tempo real, o administrador deve configurar a variável de ambiente GEMINI_API_KEY no servidor.*`
         });
       }
 
@@ -223,7 +224,7 @@ async function startServer() {
       const systemInstruction = `
 Você é o Assistente Virtual Inteligente do "Observatório da Assistência Farmacêutica", um sistema especializado em monitoramento de estoques públicos, prevenção de desabastecimentos de medicamentos e otimização da cadeia de suprimentos farmacêuticos do SUS.
 
-Abaixo está o esquema relacional do banco de dados e os dados reais contidos nas tabelas atualmente. Utilize EXCLUSIVAMENTE estes dados para responder às perguntas do usuário com precisão cirúrgica, atuando como um Engenheiro de Software Sênior e Especialista em Saúde Coletiva.
+Abaixo está o esquema relacional do banco de dados e os dados ILUSTRATIVOS (fictícios, usados em desenvolvimento) das tabelas. Sempre informe ao usuário que os números são ilustrativos e não representam a situação real do RN. Utilize EXCLUSIVAMENTE estes dados para responder às perguntas do usuário com precisão cirúrgica, atuando como um Engenheiro de Software Sênior e Especialista em Saúde Coletiva.
 
 ### ESQUEMA DO BANCO DE DADOS (PostgreSQL / Relacional)
 1. Tabela "medicamentos":
@@ -271,7 +272,7 @@ Abaixo está o esquema relacional do banco de dados e os dados reais contidos na
   - Se Dias de Cobertura >= 30: Risco "BAIXO" (Estoque saudável)
 - Alerta de Vencimento: Se a validade estiver a menos de 30 dias da data atual do sistema (Considere hoje como: 2026-07-17).
 
-### DADOS REAIS ATUAIS (FORMATO JSON):
+### DADOS ILUSTRATIVOS (FORMATO JSON):
 - Medicamentos: ${JSON.stringify(MEDICAMENTOS_MOCK)}
 - Instituicoes: ${JSON.stringify(INSTITUICOES_MOCK)}
 - Estoques: ${JSON.stringify(ESTOQUES_MOCK)}
@@ -282,12 +283,12 @@ Abaixo está o esquema relacional do banco de dados e os dados reais contidos na
 2. Sempre que apropriado, monte pequenas tabelas em Markdown comparando estoques, demanda, dias de cobertura e riscos.
 3. Se o usuário perguntar sobre o risco de desabastecimento, faça as contas matemáticas e mostre os resultados exatos (ex: "X dias de cobertura, configurando risco CRÍTICO").
 4. Forneça o comando SQL correspondente que o desenvolvedor usaria no PostgreSQL para obter essa informação real do banco de dados, enriquecendo o caráter técnico da plataforma.
-5. Seja proativo e sugira ações práticas, como "Recomenda-se transferência de X unidades do Almoxarifado Central (MED-XXX) para sanar o desabastecimento imediato na UPA Sobradinho".
+5. Seja proativo e sugira ações práticas, como "Recomenda-se transferência de X unidades do Almoxarifado Central (MED-XXX) para sanar o desabastecimento imediato na unidade de exemplo".
 `.trim();
 
       // Fazer chamada ao Gemini utilizando o SDK moderno @google/genai
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: process.env.GEMINI_MODEL || "gemini-3.5-flash",
         contents: query,
         config: {
           systemInstruction: systemInstruction,

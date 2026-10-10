@@ -62,7 +62,8 @@ import {
 } from "./rnData";
 import { auth, db, handleFirestoreError, OperationType } from "./firebase";
 import { 
-  signInWithPopup, 
+  signInWithPopup,
+  signInWithRedirect, 
   GoogleAuthProvider, 
   signOut, 
   onAuthStateChanged, 
@@ -400,12 +401,10 @@ export default function App() {
   const [authErrorCode, setAuthErrorCode] = useState<string | null>(null);
 
   // API Key Configurations
-  const [geminiApiKey, setGeminiApiKey] = useState(() => localStorage.getItem("API_GEMINI_KEY") || "");
   const [crfApiKey, setCrfApiKey] = useState(() => localStorage.getItem("API_CRF_KEY") || "");
   const [sesapApiKey, setSesapApiKey] = useState(() => localStorage.getItem("API_SESAP_KEY") || "");
   const [anvisaApiKey, setAnvisaApiKey] = useState(() => localStorage.getItem("API_ANVISA_KEY") || "");
   const [showApiSaved, setShowApiSaved] = useState(false);
-  const [showGeminiKey, setShowGeminiKey] = useState(false);
 
   // Floating Chat State
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -707,7 +706,16 @@ export default function App() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-    } catch (error: any) {
+    } catch (firstError: any) {
+      let error = firstError;
+      if (error?.code === "auth/popup-blocked" || error?.code === "auth/operation-not-supported-in-this-environment") {
+        try {
+          await signInWithRedirect(auth, provider);
+          return;
+        } catch (redirectError: any) {
+          error = redirectError;
+        }
+      }
       console.error("Erro durante o login com o Google:", error);
       const code = error.code || "unknown";
       setAuthErrorCode(code);
@@ -909,7 +917,7 @@ export default function App() {
       const response = await fetch("/api/ai/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: finalQuery, geminiApiKey: geminiApiKey })
+        body: JSON.stringify({ query: finalQuery })
       });
       const data = await response.json();
       
@@ -4061,7 +4069,6 @@ Regras de Autonomia (Dias de Cobertura):
 
               <form onSubmit={async (e) => {
                 e.preventDefault();
-                localStorage.setItem("API_GEMINI_KEY", geminiApiKey);
                 localStorage.setItem("API_CRF_KEY", crfApiKey);
                 localStorage.setItem("API_SESAP_KEY", sesapApiKey);
                 localStorage.setItem("API_ANVISA_KEY", anvisaApiKey);
@@ -4091,36 +4098,6 @@ Regras de Autonomia (Dias de Cobertura):
               }} className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   
-                  {/* Gemini API Key */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
-                      <span className="flex items-center gap-1">
-                        <Sparkles className="h-3.5 w-3.5 text-blue-500" />
-                        Chave Gemini API (Módulo de IA Especialista)
-                      </span>
-                      <span className="text-[10px] font-mono text-slate-400 font-normal">Privacidade: Local</span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showGeminiKey ? "text" : "password"}
-                        value={geminiApiKey}
-                        onChange={(e) => setGeminiApiKey(e.target.value)}
-                        placeholder="Insira sua chave AI Studio Gemini API (AI_...) para ativar a IA Observadora"
-                        className="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 rounded-lg pl-3 pr-10 py-2 text-xs font-mono text-slate-800 placeholder:text-slate-400 shadow-xs"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowGeminiKey(!showGeminiKey)}
-                        className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 transition-colors"
-                      >
-                        {showGeminiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                    <p className="text-[10px] text-slate-400 leading-relaxed">
-                      Utilizada para inteligência de linguagem natural, diagnósticos de risco, consultas de desabastecimento e insights integrados no chat.
-                    </p>
-                  </div>
-
                   {/* CRF API Key */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
