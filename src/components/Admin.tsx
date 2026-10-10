@@ -110,6 +110,7 @@ export function Admin({ email, autorizado }: Props) {
             </select>
           </label>
           <p className="text-[11px] text-slate-500">{template.descricao}</p>
+          <a href={`/modelos/${template.id}.csv`} download className="text-[11px] font-semibold text-blue-600 hover:underline">Baixar planilha-modelo (.csv)</a>
           <p className="text-[11px] text-slate-500">
             <strong>Colunas esperadas</strong> (cabeçalho na 1ª linha):{" "}
             {template.colunas.map((c) => `${c.id}${c.obrigatoria ? "*" : ""}`).join(", ")}. As datas aceitam AAAA-MM-DD ou DD/MM/AAAA.

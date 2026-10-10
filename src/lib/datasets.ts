@@ -165,7 +165,9 @@ export async function lerArquivo(arquivo: File, template: TemplateDataset): Prom
   const cabecalho = matriz[0].map((c) => normalizar(String(c ?? "")));
   const idxPorColuna = new Map<string, number>();
   for (const col of template.colunas) {
-    const idx = cabecalho.indexOf(col.id);
+    // Aceita o identificador (data_referencia) ou o rótulo (Data de referência) no cabeçalho.
+    let idx = cabecalho.indexOf(col.id);
+    if (idx < 0) idx = cabecalho.indexOf(normalizar(col.rotulo));
     if (idx >= 0) idxPorColuna.set(col.id, idx);
   }
   const colunasAusentes = template.colunas.filter((c) => c.obrigatoria && !idxPorColuna.has(c.id)).map((c) => c.id);
