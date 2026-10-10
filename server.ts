@@ -11,12 +11,55 @@ import {
   Movimentacao
 } from "./src/data.ts";
 
+// --- LIMITES DO ENDPOINT DE IA (protegem a cota e o custo da chave Gemini) ---
+// Contadores em memória: valem por instância do Cloud Run (máx. 2 instâncias).
+const AI_LIMITS = {
+  maxQueryChars: Number(process.env.AI_MAX_QUERY_CHARS) || 500,
+  perIpPerMinute: Number(process.env.AI_PER_IP_PER_MINUTE) || 6,
+  perIpPerDay: Number(process.env.AI_PER_IP_PER_DAY) || 40,
+  globalPerDay: Number(process.env.AI_GLOBAL_PER_DAY) || 400,
+  maxOutputTokens: Number(process.env.AI_MAX_OUTPUT_TOKENS) || 800,
+};
+
+const aiHits = new Map<string, number[]>(); // ip -> timestamps (ms) das últimas 24h
+let aiGlobalDay = { day: "", count: 0 };
+
+function checkAiLimit(ip: string): string | null {
+  const now = Date.now();
+  const today = new Date(now).toISOString().slice(0, 10);
+  if (aiGlobalDay.day !== today) aiGlobalDay = { day: today, count: 0 };
+  if (aiGlobalDay.count >= AI_LIMITS.globalPerDay) {
+    return "O limite diário de consultas à IA foi atingido. Tente novamente amanhã.";
+  }
+  const hits = (aiHits.get(ip) || []).filter((t) => now - t < 24 * 60 * 60 * 1000);
+  if (hits.length >= AI_LIMITS.perIpPerDay) {
+    return "Você atingiu o limite diário de consultas à IA.";
+  }
+  if (hits.filter((t) => now - t < 60 * 1000).length >= AI_LIMITS.perIpPerMinute) {
+    return "Muitas consultas em pouco tempo. Aguarde um minuto e tente de novo.";
+  }
+  hits.push(now);
+  aiHits.set(ip, hits);
+  aiGlobalDay.count++;
+  return null;
+}
+
+// Evita crescimento indefinido do mapa de IPs.
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, hits] of aiHits) {
+    if (hits.every((t) => now - t >= 24 * 60 * 60 * 1000)) aiHits.delete(ip);
+  }
+}, 60 * 60 * 1000).unref();
+
 async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
 
   // Habilitar processamento de JSON no body das requisições
-  app.use(express.json());
+  // Atrás do Firebase Hosting + Cloud Run: confia em 2 proxies para obter o IP do cliente.
+  app.set("trust proxy", 2);
+  app.use(express.json({ limit: "20kb" }));
 
   // --- API ENDPOINTS RESTFUL ---
 
@@ -197,8 +240,11 @@ async function startServer() {
     try {
       const { query } = req.body;
 
-      if (!query) {
+      if (!query || typeof query !== "string") {
         return res.status(400).json({ error: "A pergunta (query) é obrigatória." });
+      }
+      if (query.length > AI_LIMITS.maxQueryChars) {
+        return res.status(400).json({ error: `A pergunta deve ter no máximo ${AI_LIMITS.maxQueryChars} caracteres.` });
       }
 
       // Obter chave de API
@@ -208,6 +254,12 @@ async function startServer() {
         return res.json({
           response: `**[Nota Operacional - Modo Offline/Sem Chave]**\n\nIdentificamos que a chave de API do Gemini não está configurada no painel de Secrets ou contém o valor padrão.\n\nContudo, como um assistente especialista estruturado, aqui está o comportamento esperado para a sua pergunta: *"${query}"*:\n\n1. **Identificação da Unidade e Medicamento**: O sistema mapearia os termos da pergunta.\n2. **Execução SQL Equivalente**:\n   \`\`\`sql\n   SELECT m.nome, i.nome, e.quantidade, e.demanda_mensal, \n          ROUND(e.quantidade / (e.demanda_mensal / 30.0), 1) as dias_cobertura\n   FROM estoques e\n   JOIN medicamentos m ON e.medicamento_id = m.id\n   JOIN instituicoes i ON e.instituicao_id = i.id\n   WHERE m.nome ILIKE '%insulina%'\n     OR i.nome ILIKE '%Asa Norte%';\n   \`\`\`\n3. **Resposta Analítica**: A insulina no HRAN (unidade de exemplo) está atualmente com **Estoques Críticos** (150 unidades contra demanda mensal de 1200), restando apenas **3,7 dias de cobertura**. Há risco eminente de desabastecimento total se uma nova transferência ou compra não for concluída esta semana.\n\n*Para ativar a IA em tempo real, o administrador deve configurar a variável de ambiente GEMINI_API_KEY no servidor.*`
         });
+      }
+
+      // Só aplica limites quando há chamada real ao Gemini (o modo offline não tem custo).
+      const limitMessage = checkAiLimit(req.ip || "desconhecido");
+      if (limitMessage) {
+        return res.status(429).json({ error: limitMessage });
       }
 
       // Inicializar o cliente Gemini de forma Lazy (com cabeçalho de telemetria obrigatório)
@@ -293,6 +345,7 @@ Abaixo está o esquema relacional do banco de dados e os dados ILUSTRATIVOS (fic
         config: {
           systemInstruction: systemInstruction,
           temperature: 0.3, // Menor temperatura para respostas lógicas e focadas nos dados
+          maxOutputTokens: AI_LIMITS.maxOutputTokens,
         }
       });
 
