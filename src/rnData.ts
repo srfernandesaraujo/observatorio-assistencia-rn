@@ -47,17 +47,6 @@ export interface MedicamentoJudicializado {
   comentarios: string;
 }
 
-export interface IncidenteFarmacovigilancia {
-  id: string;
-  medicamento: string;
-  lote: string;
-  reacaoAdversa: string;
-  gravidade: "Leve" | "Moderada" | "Grave";
-  unidadeNotificante: string;
-  data: string;
-  status: "Analisado" | "Em Investigação" | "Alerta Emitido";
-}
-
 // 8 Regiões de Saúde do Rio Grande do Norte (Padrão Oficial SESAP-RN)
 export const REGIOES_SAUDE_RN: RegiaoSaudeRN[] = [
   {
@@ -194,22 +183,6 @@ export const QUALIDADE_MEDIDAS_RN = {
   ]
 };
 
-// Monitoramento de Antimicrobianos (Stewardship)
-export const MONITORAMENTO_ANTIMICROBIANOS_RN = {
-  reducaoDispensacaoInadequada: 12.5, // % de redução de uso irracional
-  dddMeropenemHospitais: [
-    { hospital: "Hosp. Monsenhor Walfredo Gurgel (Natal)", ddd: 14.8, limiteMax: 12.0 },
-    { hospital: "Hosp. Regional Tarcísio Maia (Mossoró)", ddd: 11.2, limiteMax: 12.0 },
-    { hospital: "Hosp. Giselda Trigueiro (Infectologia - Natal)", ddd: 18.5, limiteMax: 20.0 },
-    { hospital: "Hosp. Dr. Lindolfo Gomes (Caicó)", ddd: 8.4, limiteMax: 10.0 }
-  ],
-  alertasResistencia: [
-    { id: "AR-101", patogeno: "Klebsiella pneumoniae resistente a carbapenêmicos (KPC)", hospital: "Walfredo Gurgel", amostrasGerais: 42, tendencia: "Aumento" },
-    { id: "AR-102", patogeno: "Acinetobacter baumannii multirresistente", hospital: "Tarcísio Maia", amostrasGerais: 28, tendencia: "Estável" },
-    { id: "AR-103", patogeno: "Staphylococcus aureus resistente à meticilina (MRSA)", hospital: "Maternidade Januário Cicco", amostrasGerais: 15, tendencia: "Queda" }
-  ]
-};
-
 // Registro de Judicialização no Rio Grande do Norte
 export const JUDICIALIZACAO_RN: MedicamentoJudicializado[] = [
   {
@@ -288,40 +261,6 @@ export const ATS_DOSSIERS_RN: DossierATS[] = [
     impactoOrcamentario5Anos: 9600000,
     custoEfetividadeSugerido: "Razão de custo-efetividade incremental (ICER) excessiva para o cenário orçamentário do SUS-RN.",
     dataSubmissao: "2025-11-05"
-  }
-];
-
-// Casos Reais de Farmacovigilância
-export const INCIDENTES_FARMACOVIGILANCIA_RN: IncidenteFarmacovigilancia[] = [
-  {
-    id: "FV-01",
-    medicamento: "Amoxicilina 500mg",
-    lote: "L-AMX401",
-    reacaoAdversa: "Urticária intensa e angioedema em três pacientes na mesma unidade de dispensação",
-    gravidade: "Moderada",
-    unidadeNotificante: "UPA Mossoró (Belo Horizonte)",
-    data: "2026-07-14",
-    status: "Em Investigação"
-  },
-  {
-    id: "FV-02",
-    medicamento: "Insulina Humana NPH 100 UI",
-    lote: "L-INS984",
-    reacaoAdversa: "Hipoglicemia severa recorrente associada à suspeita de perda de potência por falha de refrigeração",
-    gravidade: "Grave",
-    unidadeNotificante: "UBS Lagoa Azul (Natal)",
-    data: "2026-07-16",
-    status: "Alerta Emitido"
-  },
-  {
-    id: "FV-03",
-    medicamento: "Losartana Potássica 50mg",
-    lote: "L-LOS210",
-    reacaoAdversa: "Tosse seca refratária de início súbito",
-    gravidade: "Leve",
-    unidadeNotificante: "Farmácia de Alto Custo - Mossoró",
-    data: "2026-07-08",
-    status: "Analisado"
   }
 ];
 

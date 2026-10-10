@@ -28,21 +28,6 @@ service cloud.firestore {
       return resource.data;
     }
 
-    // Validation for Pharmacovigilance
-    function isValidPharmacovigilance(data) {
-      return data.keys().hasAll(['id', 'medicamento', 'lote', 'reacaoAdversa', 'gravidade', 'unidadeNotificante', 'data', 'status', 'createdBy'])
-        && data.keys().size() == 9
-        && data.id is string && data.id.size() <= 100
-        && data.medicamento is string && data.medicamento.size() <= 100
-        && data.lote is string && data.lote.size() <= 50
-        && data.reacaoAdversa is string && data.reacaoAdversa.size() <= 1000
-        && data.gravidade in ['Leve', 'Moderada', 'Grave']
-        && data.unidadeNotificante is string && data.unidadeNotificante.size() <= 150
-        && data.data is string && data.data.size() <= 50
-        && data.status in ['Em Investigação', 'Arquivado', 'Confirmado']
-        && data.createdBy == request.auth.uid;
-    }
-
     // Validation for Settings
     function isValidUserSettings(data) {
       return data.uid == request.auth.uid
@@ -63,22 +48,6 @@ service cloud.firestore {
       allow create: if isOwner(userId) && isValidUserSettings(incoming());
       allow update: if isOwner(userId) && isValidUserSettings(incoming()) && incoming().uid == existing().uid;
       allow delete: if false;
-    }
-
-    // Pharmacovigilance paths
-    match /pharmacovigilance/{reportId} {
-      allow get: if isSignedIn();
-      allow list: if isSignedIn() && resource.data.createdBy != null;
-      allow create: if isSignedIn() && isValidId(reportId) && isValidPharmacovigilance(incoming());
-      allow update: if isSignedIn() 
-        && isValidPharmacovigilance(incoming())
-        && existing().createdBy == request.auth.uid
-        && incoming().createdBy == existing().createdBy
-        && (
-          // Action: Edit details of report
-          incoming().diff(existing()).affectedKeys().hasOnly(['medicamento', 'lote', 'reacaoAdversa', 'unidadeNotificante', 'data'])
-        );
-      allow delete: if isSignedIn() && existing().createdBy == request.auth.uid && existing().status == 'Em Investigação';
     }
   }
 }

@@ -1,20 +1,48 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Observatório da Assistência Farmacêutica do RN
 
-# Run and deploy your AI Studio app
+Plataforma pública de transparência de dados da assistência farmacêutica do Rio Grande do Norte.
+O site é público; o login (Google) serve apenas para a administração e profissionais autorizados editarem conteúdo e importarem dados.
 
-This contains everything you need to run your app locally.
+## Rodar localmente
 
-View your app in AI Studio: https://ai.studio/apps/805c7766-e970-4c9c-93ad-6986e5087cbb
+Pré-requisito: Node.js 20+.
 
-## Run Locally
+1. `npm install`
+2. Copie `.env.example` para `.env.local` e preencha `GEMINI_API_KEY`
+3. `npm run dev` (http://localhost:3000)
 
-**Prerequisites:**  Node.js
+Outros comandos: `npm run lint` (checagem de tipos) e `npm run build`.
 
+## Configuração (portabilidade)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Toda configuração específica da instituição fica em:
+
+- `firebase-applet-config.json`: projeto Firebase (Auth e Firestore)
+- variáveis de ambiente do servidor: `GEMINI_API_KEY`, `GEMINI_MODEL`
+
+Para migrar para outra instituição (SESAP-RN, UFRN etc.): criar um projeto Firebase na conta da instituição, trocar o arquivo de configuração, apontar o domínio e autorizá-lo em Authentication > Settings > Authorized domains. Alternativamente, transferir a propriedade do projeto atual via IAM.
+
+## Estado
+
+Em desenvolvimento. Os dados em `src/data.ts` e `src/rnData.ts` são ilustrativos (fictícios) e serão substituídos por fontes reais.
+
+## Publicação
+
+O site fica no Firebase Hosting (`observatorio-rn`, https://observatorio-rn.web.app) e a API, no Cloud Run (`observatorio-rn-api`, região `southamerica-east1`). Projeto: `gen-lang-client-0867641807`.
+
+Site (front-end):
+
+```
+npm run build
+firebase deploy --only hosting:observatorio-rn
+```
+
+API (servidor Express):
+
+```
+gcloud run deploy observatorio-rn-api --source . --region southamerica-east1 --allow-unauthenticated --max-instances 2 --min-instances 0
+```
+
+Chave do Gemini: configure `GEMINI_API_KEY` no serviço Cloud Run (de preferência via Secret Manager). Sem ela, o chat responde em modo offline.
+
+Login Google: todo endereço novo onde o site rodar precisa estar em Firebase Authentication > Settings > Authorized domains.
