@@ -46,3 +46,7 @@ gcloud run deploy observatorio-rn-api --source . --region southamerica-east1 --a
 Chave do Gemini: configure `GEMINI_API_KEY` no serviço Cloud Run (de preferência via Secret Manager). Sem ela, o chat responde em modo offline.
 
 Login Google: todo endereço novo onde o site rodar precisa estar em Firebase Authentication > Settings > Authorized domains.
+
+## Limites do endpoint de IA
+
+`POST /api/ai/query` tem limites para proteger a cota da chave Gemini (variáveis de ambiente opcionais, valores padrão entre parênteses): `AI_MAX_QUERY_CHARS` (500), `AI_PER_IP_PER_MINUTE` (6), `AI_PER_IP_PER_DAY` (40), `AI_GLOBAL_PER_DAY` (400) e `AI_MAX_OUTPUT_TOKENS` (800). Os contadores ficam em memória e valem por instância do Cloud Run. Defina também um orçamento com alerta de gastos no console do Google Cloud.
