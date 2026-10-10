@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Usuarios } from "./Usuarios";
+import { carregarMunicipiosRN } from "../lib/ibge";
 import { SUPER_ADMIN_EMAIL, podeEditar, temAlgumAcesso, type Perfil } from "../lib/perfis";
 import { UploadCloud, FileSpreadsheet, CheckCircle, AlertTriangle, ShieldAlert } from "lucide-react";
 import {
@@ -43,7 +44,15 @@ function ImportarDados({ email, permitidos }: PropsImportar) {
     if (!f) return;
     setArquivo(f);
     try {
-      setLeitura(await lerArquivo(f, template));
+      let municipios: string[] = [];
+      if (template.colunas.some((c) => c.tipo === "municipio")) {
+        try {
+          municipios = (await carregarMunicipiosRN()).map((m) => m.nome);
+        } catch {
+          throw new Error("Não foi possível carregar a lista oficial de municípios (IBGE) para validar o arquivo. Tente novamente.");
+        }
+      }
+      setLeitura(await lerArquivo(f, template, municipios));
     } catch (e: any) {
       setErro(e?.message || "Não foi possível ler o arquivo.");
     }

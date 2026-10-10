@@ -2,6 +2,7 @@ import { ProgramasGovernamentais } from "./components/ProgramasGovernamentais";
 import { Judicializacao } from "./components/Judicializacao";
 import { Landing } from "./components/Landing";
 import { Admin } from "./components/Admin";
+import { Comparador } from "./components/Comparador";
 import { AlertasSanitarios } from "./components/AlertasSanitarios";
 import { TabelaDataset } from "./components/TabelaDataset";
 import { lerPerfil, type Perfil } from "./lib/perfis";
@@ -156,7 +157,7 @@ export default function App() {
 
   // Navegação superior: cada item abre uma área; "indicadores" mostra a barra lateral de módulos.
   type TopNavId = "inicio" | "indicadores" | "programas" | "educacao" | "impacto" | "producao" | "admin";
-  const INDICADORES_SUBTABS = ["visao_geral", "desabastecimento", "alertas", "custos", "qualidade", "judicializacao", "ats_farmacovigilancia"];
+  const INDICADORES_SUBTABS = ["visao_geral", "comparador", "desabastecimento", "alertas", "custos", "qualidade", "judicializacao", "ats_farmacovigilancia"];
   const isIndicadores = activeTab === "principal" && INDICADORES_SUBTABS.includes(activeRnSubTab);
   const topNav: { id: TopNavId; label: string; icon: any }[] = [
     { id: "inicio", label: "Início", icon: Home },
@@ -487,7 +488,7 @@ export default function App() {
         )}
 
         {/* AVISO DE DADOS ILUSTRATIVOS (enquanto as fontes reais não são integradas) */}
-        {isIndicadores && (
+        {isIndicadores && !["comparador", "alertas", "judicializacao"].includes(activeRnSubTab) && (
           <div role="note" className="bg-amber-50 border border-amber-200 text-amber-900 text-xs rounded-lg px-4 py-2.5">
             <strong>Dados ilustrativos.</strong> Os números desta área são de demonstração e serão substituídos por fontes oficiais com data de atualização.
           </div>
@@ -506,6 +507,7 @@ export default function App() {
               </div>
               {[
                 { id: "visao_geral", label: "Visão Geral e Alertas", icon: Activity, hover: "hover:bg-blue-50 hover:text-blue-600" },
+                { id: "comparador", label: "Comparador Territorial", icon: BarChart3, hover: "hover:bg-blue-50 hover:text-blue-600" },
                 { id: "desabastecimento", label: "Desabastecimento RN", icon: AlertTriangle, hover: "hover:bg-red-50 hover:text-red-600" },
                 { id: "alertas", label: "Alertas Sanitários", icon: ShieldAlert, hover: "hover:bg-red-50 hover:text-red-600" },
                 { id: "custos", label: "Custos & Orçamento", icon: Coins, hover: "hover:bg-emerald-50 hover:text-emerald-600" },
@@ -1149,6 +1151,9 @@ export default function App() {
 
               {/* SUB-TAB 5: JUDICIALIZAÇÃO */}
               {activeRnSubTab === "judicializacao" && <Judicializacao />}
+
+              {/* SUB-TAB: COMPARADOR TERRITORIAL */}
+              {activeRnSubTab === "comparador" && <Comparador />}
 
               {/* SUB-TAB: ALERTAS SANITÁRIOS */}
               {activeRnSubTab === "alertas" && <AlertasSanitarios />}

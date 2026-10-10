@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { type TemplateDataset } from "./templates";
+import { normalizar } from "./texto";
 
 export * from "./templates";
 
@@ -30,16 +31,6 @@ export interface ResultadoLeitura {
 }
 
 const MAX_LINHAS = 5000;
-
-function normalizar(s: string): string {
-  return s
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "_")
-    .replace(/^_+|_+$/g, "");
-}
 
 function paraISO(valor: unknown): string | null {
   if (valor instanceof Date && !isNaN(valor.getTime())) return valor.toISOString().slice(0, 10);
@@ -74,7 +65,9 @@ async function lerMatriz(arquivo: File): Promise<unknown[][]> {
   throw new Error("Formato não suportado. Envie um arquivo .csv ou .xlsx.");
 }
 
-export async function lerArquivo(arquivo: File, template: TemplateDataset): Promise<ResultadoLeitura> {
+// municipios: nomes oficiais do IBGE, usados para validar colunas do tipo "municipio" (se vazio, não valida).
+export async function lerArquivo(arquivo: File, template: TemplateDataset, municipios: string[] = []): Promise<ResultadoLeitura> {
+  const nomesMunicipio = new Map(municipios.map((m) => [normalizar(m), m]));
   const matriz = await lerMatriz(arquivo);
   if (matriz.length < 2) throw new Error("O arquivo precisa ter um cabeçalho e ao menos uma linha de dados.");
   if (matriz.length - 1 > MAX_LINHAS) throw new Error(`O arquivo tem mais de ${MAX_LINHAS} linhas.`);
@@ -117,6 +110,11 @@ export async function lerArquivo(arquivo: File, template: TemplateDataset): Prom
         const d = paraISO(valor);
         if (d === null) problemas.push(`"${col.rotulo}" deve estar em AAAA-MM-DD ou DD/MM/AAAA`);
         linha[col.id] = d;
+      } else if (col.tipo === "municipio") {
+        const texto = String(valor).trim();
+        const oficial = nomesMunicipio.get(normalizar(texto));
+        if (nomesMunicipio.size > 0 && !oficial) problemas.push(`Município "${texto}" não reconhecido (use o nome oficial do IBGE, da lista da planilha)`);
+        linha[col.id] = oficial ?? texto;
       } else if (col.tipo === "opcao") {
         const texto = String(valor).trim();
         const opcao = col.opcoes?.find((o) => normalizar(o) === normalizar(texto));

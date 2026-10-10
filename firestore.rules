@@ -49,7 +49,7 @@ service cloud.firestore {
         && request.resource.data.papel in ['admin', 'professor', 'estudante']
         && request.resource.data.ativo is bool
         && request.resource.data.permissoes is map
-        && request.resource.data.permissoes.keys().hasOnly(['desabastecimento', 'alertas_sanitarios', 'pregoes', 'custos', 'judicializacao', 'producao_cientifica']);
+        && request.resource.data.permissoes.keys().hasOnly(['desabastecimento', 'alertas_sanitarios', 'indicadores_municipais', 'municipios_regioes', 'pregoes', 'custos', 'judicializacao', 'producao_cientifica']);
       allow delete: if isSuper();
     }
 
