@@ -1,7 +1,7 @@
 // Formatos dos conjuntos de dados. Módulo sem dependências, usado pelo site e pelo gerador de planilhas-modelo.
 // Os formatos são provisórios: serão ajustados quando as fontes (SESAP-RN, SUAF etc.) informarem o formato real.
 
-export type TipoColuna = "texto" | "numero" | "data" | "opcao";
+export type TipoColuna = "texto" | "numero" | "data" | "opcao" | "municipio";
 
 export interface ColunaTemplate {
   id: string;
@@ -47,6 +47,27 @@ export const TEMPLATES: TemplateDataset[] = [
       { id: "lotes", rotulo: "Lotes", tipo: "texto", ajuda: "Lotes afetados, separados por vírgula. Deixe em branco se forem todos.", exemplo: "24112378" },
       { id: "motivo", rotulo: "Motivo", tipo: "texto", obrigatoria: true, ajuda: "Motivo, em linguagem simples e em uma frase.", exemplo: "Presença de partículas estranhas na solução" },
       { id: "link", rotulo: "Link da fonte", tipo: "texto", obrigatoria: true, ajuda: "Endereço (URL) da notícia ou resolução oficial da Anvisa.", exemplo: "https://www.gov.br/anvisa/pt-br/assuntos/noticias-anvisa/2026/..." },
+    ],
+  },
+  {
+    id: "indicadores_municipais",
+    titulo: "Indicadores por município",
+    descricao: "Um indicador por linha, por município e ano; alimenta o comparador territorial.",
+    colunas: [
+      { id: "municipio", rotulo: "Município", tipo: "municipio", obrigatoria: true, ajuda: "Escolha o município na lista (nomes oficiais do IBGE).", exemplo: "Natal" },
+      { id: "indicador", rotulo: "Indicador", tipo: "texto", obrigatoria: true, ajuda: "Nome do indicador, igual em todas as linhas dele.", exemplo: "Farmácias públicas" },
+      { id: "ano", rotulo: "Ano", tipo: "numero", obrigatoria: true, ajuda: "Ano de referência, com 4 dígitos.", exemplo: 2025 },
+      { id: "valor", rotulo: "Valor", tipo: "numero", obrigatoria: true, ajuda: "Valor numérico do indicador.", exemplo: 42 },
+      { id: "unidade", rotulo: "Unidade", tipo: "texto", ajuda: "Unidade do valor (ex.: unidades, R$, %). Se for uma contagem, o comparador pode mostrar por 10 mil habitantes.", exemplo: "unidades" },
+    ],
+  },
+  {
+    id: "municipios_regioes",
+    titulo: "Municípios por região de saúde",
+    descricao: "Vínculo oficial de cada município com sua região de saúde (fonte: SESAP-RN).",
+    colunas: [
+      { id: "municipio", rotulo: "Município", tipo: "municipio", obrigatoria: true, ajuda: "Escolha o município na lista (nomes oficiais do IBGE).", exemplo: "Mossoró" },
+      { id: "regiao_saude", rotulo: "Região de saúde", tipo: "texto", obrigatoria: true, ajuda: "Nome da região de saúde, escrito sempre igual.", exemplo: "2ª Região de Saúde" },
     ],
   },
   {

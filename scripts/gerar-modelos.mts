@@ -4,6 +4,7 @@ import ExcelJS from "exceljs";
 import fs from "fs";
 import path from "path";
 import { TEMPLATES, type TemplateDataset, type ColunaTemplate } from "../src/lib/templates.ts";
+import { parseMunicipiosIBGE } from "../src/lib/ibge.ts";
 
 const SAIDA = path.resolve("public/modelos");
 const AZUL = "FF1D4ED8";
@@ -15,6 +16,7 @@ const formatoTexto = (c: ColunaTemplate) =>
   c.tipo === "data" ? "Data (DD/MM/AAAA)"
   : c.tipo === "numero" ? "Número"
   : c.tipo === "opcao" ? `Lista: ${c.opcoes?.join(" / ")}`
+  : c.tipo === "municipio" ? "Lista de municípios (IBGE)"
   : "Texto";
 
 function larguraColuna(c: ColunaTemplate): number {
@@ -22,7 +24,14 @@ function larguraColuna(c: ColunaTemplate): number {
   return Math.min(base, 48);
 }
 
-async function gerar(t: TemplateDataset) {
+// Nomes oficiais dos municípios do RN (IBGE), usados na lista suspensa das planilhas com coluna de município.
+async function nomesMunicipios(): Promise<string[]> {
+  const r = await fetch("https://servicodados.ibge.gov.br/api/v3/agregados/4714/periodos/2022/variaveis/93?localidades=N6%5BN3%5B24%5D%5D");
+  if (!r.ok) throw new Error(`IBGE ${r.status}`);
+  return parseMunicipiosIBGE(await r.json()).map((m) => m.nome);
+}
+
+async function gerar(t: TemplateDataset, municipios: string[]) {
   const wb = new ExcelJS.Workbook();
   wb.creator = "Observatório da Assistência Farmacêutica do RN";
 
@@ -48,7 +57,16 @@ async function gerar(t: TemplateDataset) {
     else col.numFmt = "@";
     for (let r = 2; r <= LINHAS_VALIDACAO; r++) {
       const cell = ws.getCell(r, i + 1);
-      if (c.tipo === "opcao" && c.opcoes) {
+      if (c.tipo === "municipio") {
+        cell.dataValidation = {
+          type: "list",
+          allowBlank: !c.obrigatoria,
+          formulae: [`'Municípios IBGE'!$A$2:$A$${municipios.length + 1}`],
+          showErrorMessage: true,
+          errorTitle: "Município inválido",
+          error: "Escolha um município da lista (nomes oficiais do IBGE).",
+        };
+      } else if (c.tipo === "opcao" && c.opcoes) {
         cell.dataValidation = {
           type: "list",
           allowBlank: !c.obrigatoria,
@@ -122,6 +140,15 @@ async function gerar(t: TemplateDataset) {
     }
   });
 
+  // Aba com a lista oficial de municípios (referenciada pela validação da coluna Município)
+  if (t.colunas.some((c) => c.tipo === "municipio")) {
+    const wm = wb.addWorksheet("Municípios IBGE");
+    wm.columns = [{ width: 36 }];
+    wm.getCell("A1").value = "Município (nome oficial)";
+    wm.getCell("A1").font = { bold: true };
+    municipios.forEach((m, i) => (wm.getCell(i + 2, 1).value = m));
+  }
+
   const arquivo = path.join(SAIDA, `${t.id}.xlsx`);
   await wb.xlsx.writeFile(arquivo);
   return arquivo;
@@ -129,4 +156,6 @@ async function gerar(t: TemplateDataset) {
 
 fs.mkdirSync(SAIDA, { recursive: true });
 for (const f of fs.readdirSync(SAIDA)) if (f.endsWith(".csv")) fs.unlinkSync(path.join(SAIDA, f));
-for (const t of TEMPLATES) console.log("gerado:", await gerar(t));
+const municipios = await nomesMunicipios();
+console.log(`${municipios.length} municípios (IBGE)`);
+for (const t of TEMPLATES) console.log("gerado:", await gerar(t, municipios));
