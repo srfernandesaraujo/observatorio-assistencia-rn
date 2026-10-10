@@ -2,6 +2,7 @@ import { ProgramasGovernamentais } from "./components/ProgramasGovernamentais";
 import { Judicializacao } from "./components/Judicializacao";
 import { Landing } from "./components/Landing";
 import { Admin } from "./components/Admin";
+import { AlertasSanitarios } from "./components/AlertasSanitarios";
 import { TabelaDataset } from "./components/TabelaDataset";
 import { lerPerfil, type Perfil } from "./lib/perfis";
 import { EmElaboracao } from "./components/EmElaboracao";
@@ -140,7 +141,7 @@ export default function App() {
   const [aiChat, setAiChat] = useState<{ role: "user" | "model" | "system"; text: string }[]>([
     {
       role: "model",
-      text: "Olá! Sou a **IA Observadora da Assistência Farmacêutica**. Posso analisar os estoques das unidades de saúde, prever riscos de desabastecimento e recomendar ações imediatas de remanejamento ou compras com base em nossa modelagem relacional. \n\n**O que deseja saber hoje?** Escolha um dos botões rápidos abaixo ou digite sua pergunta."
+      text: "Olá! Sou o assistente do **Observatório da Assistência Farmacêutica do RN**. Respondo apenas com os dados publicados aqui, sempre citando a fonte. Posso ajudar com alertas sanitários, programas de acesso a medicamentos e indicadores. Não substituo o farmacêutico nem o médico."
     }
   ]);
   const [aiLoading, setAiLoading] = useState(false);
@@ -155,7 +156,7 @@ export default function App() {
 
   // Navegação superior: cada item abre uma área; "indicadores" mostra a barra lateral de módulos.
   type TopNavId = "inicio" | "indicadores" | "programas" | "educacao" | "impacto" | "producao" | "admin";
-  const INDICADORES_SUBTABS = ["visao_geral", "desabastecimento", "custos", "qualidade", "judicializacao", "ats_farmacovigilancia"];
+  const INDICADORES_SUBTABS = ["visao_geral", "desabastecimento", "alertas", "custos", "qualidade", "judicializacao", "ats_farmacovigilancia"];
   const isIndicadores = activeTab === "principal" && INDICADORES_SUBTABS.includes(activeRnSubTab);
   const topNav: { id: TopNavId; label: string; icon: any }[] = [
     { id: "inicio", label: "Início", icon: Home },
@@ -506,6 +507,7 @@ export default function App() {
               {[
                 { id: "visao_geral", label: "Visão Geral e Alertas", icon: Activity, hover: "hover:bg-blue-50 hover:text-blue-600" },
                 { id: "desabastecimento", label: "Desabastecimento RN", icon: AlertTriangle, hover: "hover:bg-red-50 hover:text-red-600" },
+                { id: "alertas", label: "Alertas Sanitários", icon: ShieldAlert, hover: "hover:bg-red-50 hover:text-red-600" },
                 { id: "custos", label: "Custos & Orçamento", icon: Coins, hover: "hover:bg-emerald-50 hover:text-emerald-600" },
                 { id: "qualidade", label: "Qualidade de Serviços", icon: ShieldCheck, hover: "hover:bg-blue-50 hover:text-blue-600" },
                 { id: "judicializacao", label: "Índice Judicialização", icon: Scale, hover: "hover:bg-purple-50 hover:text-purple-600" },
@@ -1148,6 +1150,9 @@ export default function App() {
               {/* SUB-TAB 5: JUDICIALIZAÇÃO */}
               {activeRnSubTab === "judicializacao" && <Judicializacao />}
 
+              {/* SUB-TAB: ALERTAS SANITÁRIOS */}
+              {activeRnSubTab === "alertas" && <AlertasSanitarios />}
+
               {/* SUB-TAB 6: PROGRAMAS GOVERNAMENTAIS */}
               {activeRnSubTab === "programas" && <ProgramasGovernamentais />}
 
@@ -1376,8 +1381,8 @@ export default function App() {
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <div>
-                  <h3 className="font-display font-bold text-sm text-slate-900 font-sans">IA Observadora da Assistência Farmacêutica</h3>
-                  <p className="text-[10px] text-slate-500 font-mono">Gemini 2.5 Flash • Integrado com o SUS/RN</p>
+                  <h3 className="font-display font-bold text-sm text-slate-900 font-sans">Assistente do Observatório</h3>
+                  <p className="text-[10px] text-slate-500 font-mono">Responde só com dados publicados</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -1445,9 +1450,9 @@ export default function App() {
                 <Info className="h-3 w-3" /> Sugestões:
               </span>
               {[
-                { label: "Alertas de Risco", q: "Quais medicamentos estão desabastecidos ou em nível crítico no RN?" },
-                { label: "Caso Atorvastatina", q: "Como resolver o vencimento do lote L-ATO705 de Atorvastatina?" },
-                { label: "Previsão Meropenem", q: "Qual a recomendação de controle de Meropenem no Hospital Giselda?" }
+                { label: "Alertas recentes", q: "Quais são os alertas sanitários mais recentes?" },
+                { label: "Como obter remédios", q: "Como posso obter medicamentos pelo SUS?" },
+                { label: "Faltas de medicamentos", q: "Há medicamentos em falta no RN?" }
               ].map((chip, idx) => (
                 <button
                   key={idx}

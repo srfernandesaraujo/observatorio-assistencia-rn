@@ -123,7 +123,10 @@ export async function lerArquivo(arquivo: File, template: TemplateDataset): Prom
         if (!opcao) problemas.push(`"${col.rotulo}" deve ser um de: ${col.opcoes?.join(", ")}`);
         linha[col.id] = opcao ?? texto;
       } else {
-        linha[col.id] = String(valor).trim();
+        const texto = String(valor).trim();
+        // Campos de endereço só aceitam http(s): o link é exibido publicamente.
+        if (/^link/.test(col.id) && !/^https?:\/\//i.test(texto)) problemas.push(`"${col.rotulo}" deve começar com http:// ou https://`);
+        linha[col.id] = texto;
       }
     }
     if (problemas.length) erros.push({ linha: i + 1, mensagem: problemas.join("; ") });

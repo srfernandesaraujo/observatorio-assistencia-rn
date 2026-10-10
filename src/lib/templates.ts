@@ -36,6 +36,20 @@ export const TEMPLATES: TemplateDataset[] = [
     ],
   },
   {
+    id: "alertas_sanitarios",
+    titulo: "Alertas sanitários (Anvisa)",
+    descricao: "Recolhimentos, suspensões e proibições de medicamentos, com link para a fonte oficial.",
+    colunas: [
+      { id: "data", rotulo: "Data", tipo: "data", obrigatoria: true, ajuda: "Data da publicação do alerta (DD/MM/AAAA).", exemplo: "06/10/2026" },
+      { id: "tipo", rotulo: "Tipo", tipo: "opcao", obrigatoria: true, opcoes: ["Recolhimento", "Suspensão", "Proibição", "Falsificação", "Outro"], ajuda: "Escolha na lista.", exemplo: "Recolhimento" },
+      { id: "produto", rotulo: "Produto", tipo: "texto", obrigatoria: true, ajuda: "Nome do medicamento com concentração e forma, como na notícia.", exemplo: "Dipirona sódica 500 mg/mL solução injetável" },
+      { id: "empresa", rotulo: "Empresa", tipo: "texto", ajuda: "Fabricante ou detentor do registro.", exemplo: "Hypofarma" },
+      { id: "lotes", rotulo: "Lotes", tipo: "texto", ajuda: "Lotes afetados, separados por vírgula. Deixe em branco se forem todos.", exemplo: "24112378" },
+      { id: "motivo", rotulo: "Motivo", tipo: "texto", obrigatoria: true, ajuda: "Motivo, em linguagem simples e em uma frase.", exemplo: "Presença de partículas estranhas na solução" },
+      { id: "link", rotulo: "Link da fonte", tipo: "texto", obrigatoria: true, ajuda: "Endereço (URL) da notícia ou resolução oficial da Anvisa.", exemplo: "https://www.gov.br/anvisa/pt-br/assuntos/noticias-anvisa/2026/..." },
+    ],
+  },
+  {
     id: "pregoes",
     titulo: "Pregões e compras",
     descricao: "Acompanhamento de pregões, usado como justificativa de faltas.",

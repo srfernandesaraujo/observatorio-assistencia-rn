@@ -11,7 +11,7 @@ const usuario = (email, papel, permissoes, ativo = true) => ({
 
 await env.withSecurityRulesDisabled(async (ctx) => {
   const d = ctx.firestore();
-  await setDoc(doc(d, "users", "admin@teste.com"), usuario("admin@teste.com", "admin", { custos: true, pregoes: true, desabastecimento: true, judicializacao: true, producao_cientifica: true }));
+  await setDoc(doc(d, "users", "admin@teste.com"), usuario("admin@teste.com", "admin", { custos: true, pregoes: true, desabastecimento: true, judicializacao: true, producao_cientifica: true, alertas_sanitarios: true }));
   await setDoc(doc(d, "users", "estudante@teste.com"), usuario("estudante@teste.com", "estudante", { producao_cientifica: true }));
   await setDoc(doc(d, "users", "inativo@teste.com"), usuario("inativo@teste.com", "admin", { custos: true }, false));
 });
@@ -74,6 +74,8 @@ await t("anônimo NÃO lê cadastro", () => assertFails(getDoc(doc(anon, "users"
 await t("super NÃO cria papel inválido", () => assertFails(setDoc(doc(superAdm, "users", "novo@teste.com"), novoUsuario({ papel: "superadmin" }))));
 await t("super NÃO cria permissão desconhecida", () => assertFails(setDoc(doc(superAdm, "users", "novo@teste.com"), novoUsuario({ permissoes: { usuarios: true } }))));
 await t("super NÃO cria e-mail com maiúsculas", () => assertFails(setDoc(doc(superAdm, "users", "Novo@Teste.com"), { ...novoUsuario(), email: "Novo@Teste.com" })));
+await t("super cadastra usuário com permissão de alertas", () => assertSucceeds(setDoc(doc(superAdm, "users", "novo@teste.com"), novoUsuario({ permissoes: { alertas_sanitarios: true } }))));
+await t("admin com permissão publica alertas", () => assertSucceeds(setDoc(doc(admin, "datasets", "alertas_sanitarios"), meta("alertas_sanitarios", "admin@teste.com"))));
 await t("coleção desconhecida negada", () => assertFails(getDoc(doc(superAdm, "qualquer", "x"))));
 
 await env.cleanup();
