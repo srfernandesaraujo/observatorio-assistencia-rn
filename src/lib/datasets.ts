@@ -221,3 +221,25 @@ export async function lerDataset(templateId: string): Promise<{ meta: MetadadosD
   const ordenados = blocos.docs.map((d) => d.data() as { indice: number; linhas: Linha[] }).sort((a, b) => a.indice - b.indice);
   return { meta, linhas: ordenados.flatMap((b) => b.linhas) };
 }
+
+// Metadados (sem as linhas) de um conjunto publicado, com cache curto na sessão para páginas que listam vários conjuntos.
+export async function lerMetadados(templateId: string): Promise<MetadadosDataset | null> {
+  const chave = `meta-${templateId}`;
+  try {
+    const guardado = sessionStorage.getItem(chave);
+    if (guardado) {
+      const { em, meta } = JSON.parse(guardado) as { em: number; meta: MetadadosDataset | null };
+      if (Date.now() - em < 10 * 60 * 1000) return meta;
+    }
+  } catch {
+    // sem cache
+  }
+  const snap = await getDoc(doc(db, "datasets", templateId));
+  const meta = snap.exists() ? (snap.data() as MetadadosDataset) : null;
+  try {
+    sessionStorage.setItem(chave, JSON.stringify({ em: Date.now(), meta }));
+  } catch {
+    // ignora
+  }
+  return meta;
+}

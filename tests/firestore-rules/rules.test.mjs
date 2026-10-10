@@ -11,7 +11,7 @@ const usuario = (email, papel, permissoes, ativo = true) => ({
 
 await env.withSecurityRulesDisabled(async (ctx) => {
   const d = ctx.firestore();
-  await setDoc(doc(d, "users", "admin@teste.com"), usuario("admin@teste.com", "admin", { custos: true, pregoes: true, desabastecimento: true, judicializacao: true, producao_cientifica: true, alertas_sanitarios: true, indicadores_municipais: true, municipios_regioes: true }));
+  await setDoc(doc(d, "users", "admin@teste.com"), usuario("admin@teste.com", "admin", { custos: true, pregoes: true, desabastecimento: true, judicializacao: true, producao_cientifica: true, alertas_sanitarios: true, indicadores_municipais: true, municipios_regioes: true, repositorio_documentos: true }));
   await setDoc(doc(d, "users", "estudante@teste.com"), usuario("estudante@teste.com", "estudante", { producao_cientifica: true }));
   await setDoc(doc(d, "users", "inativo@teste.com"), usuario("inativo@teste.com", "admin", { custos: true }, false));
 });

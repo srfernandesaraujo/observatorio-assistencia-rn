@@ -71,6 +71,19 @@ export const TEMPLATES: TemplateDataset[] = [
     ],
   },
   {
+    id: "repositorio_documentos",
+    titulo: "Repositório de documentos",
+    descricao: "Notas técnicas, protocolos, legislação e materiais educativos, sempre com link para o documento oficial.",
+    colunas: [
+      { id: "titulo", rotulo: "Título", tipo: "texto", obrigatoria: true, ajuda: "Título exato do documento, como no original.", exemplo: "Protocolo Clínico e Diretrizes Terapêuticas da Hipertensão" },
+      { id: "tipo", rotulo: "Tipo", tipo: "opcao", obrigatoria: true, opcoes: ["Nota técnica", "Protocolo clínico (PCDT)", "Legislação", "Material educativo", "Outro"], ajuda: "Escolha na lista.", exemplo: "Protocolo clínico (PCDT)" },
+      { id: "orgao", rotulo: "Órgão emissor", tipo: "texto", obrigatoria: true, ajuda: "Quem publicou o documento (ministério, secretaria, universidade etc.).", exemplo: "Ministério da Saúde" },
+      { id: "data_publicacao", rotulo: "Data de publicação", tipo: "data", ajuda: "Data da publicação oficial (DD/MM/AAAA).", exemplo: "20/10/2025" },
+      { id: "resumo", rotulo: "Resumo", tipo: "texto", ajuda: "Uma ou duas frases sobre o conteúdo, em linguagem simples.", exemplo: "Critérios de diagnóstico e tratamento da hipertensão arterial." },
+      { id: "link", rotulo: "Link do documento", tipo: "texto", obrigatoria: true, ajuda: "Endereço (URL) do documento na fonte oficial.", exemplo: "https://www.gov.br/saude/pt-br/..." },
+    ],
+  },
+  {
     id: "pregoes",
     titulo: "Pregões e compras",
     descricao: "Acompanhamento de pregões, usado como justificativa de faltas.",
