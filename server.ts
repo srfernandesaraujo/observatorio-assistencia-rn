@@ -13,7 +13,7 @@ import {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   // Habilitar processamento de JSON no body das requisições
   app.use(express.json());
@@ -314,7 +314,7 @@ Abaixo está o esquema relacional do banco de dados e os dados ILUSTRATIVOS (fic
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist");
+    const distPath = path.join(process.cwd(), "dist", "public");
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
