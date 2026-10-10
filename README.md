@@ -63,6 +63,10 @@ RULES_PATH=../../firestore.rules npm test
 
 Requer Java e a CLI do Firebase. Cobre leitura pública, escrita só por administradores e validações de tamanho e autoria.
 
-## Administradores
+## Usuários e permissões
 
-Quem pode importar dados é definido pelos documentos `admins/{email-em-minúsculas}` no Firestore (o e-mail da conta Google precisa estar verificado). O cadastro é feito pela coordenação, pelo console do Firebase; o site não escreve nessa coleção.
+A conta **srfernandesaraujo@gmail.com** é a super administração (fixa, também nas regras do Firestore): é a única que cadastra usuários, no painel Administração > Usuários e permissões. Cada usuário tem um papel (administrador, professor ou estudante) e uma lista de conjuntos de dados que pode publicar. Os cadastros ficam em `users/{email-em-minúsculas}`; o e-mail da conta Google precisa estar verificado. Para transferir o observatório a outra instituição, troque o e-mail em `firestore.rules` (função `isSuper`) e em `src/lib/perfis.ts`.
+
+## Planilhas-modelo
+
+As planilhas em `public/modelos/*.xlsx` são geradas por `npm run modelos` a partir dos formatos em `src/lib/templates.ts`. Ao mudar um formato, rode o comando e publique o site.
