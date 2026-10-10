@@ -47,6 +47,6 @@ export const PROGRAMAS_GOVERNAMENTAIS: ProgramaGovernamental[] = [
     resumo: "Medicamentos para doenças crônicas e raras, conforme os Protocolos Clínicos e Diretrizes Terapêuticas (PCDT). No RN, a dispensação é feita pela Secretaria de Estado da Saúde Pública.",
     ondeObter: "Unidades de dispensação do componente especializado (Unicat) e farmácias vinculadas, conforme orientação da SESAP-RN.",
     comoAcessar: ["Solicitação com laudo e exames exigidos pelo PCDT da doença", "Documentos pessoais e comprovante de residência", "Confirmar documentos e local de atendimento atuais com a SESAP-RN"],
-    fonte: { rotulo: "SESAP-RN", url: "https://www.saude.rn.gov.br" },
+    fonte: { rotulo: "Ministério da Saúde (confirme local e documentos com a SESAP-RN)", url: "https://www.gov.br/saude/pt-br/composicao/sectics/daf/ceaf" },
   },
 ];
