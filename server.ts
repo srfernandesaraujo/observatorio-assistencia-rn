@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import {
   MEDICAMENTOS_MOCK,
   INSTITUICOES_MOCK,
@@ -18,7 +18,7 @@ const AI_LIMITS = {
   perIpPerMinute: Number(process.env.AI_PER_IP_PER_MINUTE) || 6,
   perIpPerDay: Number(process.env.AI_PER_IP_PER_DAY) || 40,
   globalPerDay: Number(process.env.AI_GLOBAL_PER_DAY) || 400,
-  maxOutputTokens: Number(process.env.AI_MAX_OUTPUT_TOKENS) || 800,
+  maxOutputTokens: Number(process.env.AI_MAX_OUTPUT_TOKENS) || 1500,
 };
 
 const aiHits = new Map<string, number[]>(); // ip -> timestamps (ms) das últimas 24h
@@ -346,6 +346,8 @@ Abaixo está o esquema relacional do banco de dados e os dados ILUSTRATIVOS (fic
           systemInstruction: systemInstruction,
           temperature: 0.3, // Menor temperatura para respostas lógicas e focadas nos dados
           maxOutputTokens: AI_LIMITS.maxOutputTokens,
+          // Raciocínio mínimo: tokens de "pensamento" contam no limite de saída e cortavam a resposta.
+          thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL },
         }
       });
 
