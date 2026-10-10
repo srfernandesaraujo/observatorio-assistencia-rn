@@ -25,3 +25,24 @@ Para migrar para outra instituição (SESAP-RN, UFRN etc.): criar um projeto Fir
 ## Estado
 
 Em desenvolvimento. Os dados em `src/data.ts` e `src/rnData.ts` são ilustrativos (fictícios) e serão substituídos por fontes reais.
+
+## Publicação
+
+O site fica no Firebase Hosting (`observatorio-rn`, https://observatorio-rn.web.app) e a API, no Cloud Run (`observatorio-rn-api`, região `southamerica-east1`). Projeto: `gen-lang-client-0867641807`.
+
+Site (front-end):
+
+```
+npm run build
+firebase deploy --only hosting:observatorio-rn
+```
+
+API (servidor Express):
+
+```
+gcloud run deploy observatorio-rn-api --source . --region southamerica-east1 --allow-unauthenticated --max-instances 2 --min-instances 0
+```
+
+Chave do Gemini: configure `GEMINI_API_KEY` no serviço Cloud Run (de preferência via Secret Manager). Sem ela, o chat responde em modo offline.
+
+Login Google: todo endereço novo onde o site rodar precisa estar em Firebase Authentication > Settings > Authorized domains.
