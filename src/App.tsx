@@ -3,7 +3,7 @@ import { Judicializacao } from "./components/Judicializacao";
 import { Landing } from "./components/Landing";
 import { Admin } from "./components/Admin";
 import { TabelaDataset } from "./components/TabelaDataset";
-import { ehAdministrador } from "./lib/datasets";
+import { lerPerfil, type Perfil } from "./lib/perfis";
 import { EmElaboracao } from "./components/EmElaboracao";
 import { useState, useEffect, useRef, useMemo } from "react";
 import {
@@ -145,8 +145,8 @@ export default function App() {
   ]);
   const [aiLoading, setAiLoading] = useState(false);
   
-  // Permissão de administração (null = verificando)
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  // Perfil de acesso (null = verificando)
+  const [perfil, setPerfil] = useState<Perfil | null>(null);
 
   // States para Cópia de Código
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -220,8 +220,8 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
       setAuthLoading(false);
-      setIsAdmin(user ? null : false);
-      if (user) setIsAdmin(await ehAdministrador(user.email));
+      setPerfil(null);
+      if (user) setPerfil(await lerPerfil(user.email));
     });
     return () => unsubscribe();
   }, []);
@@ -1348,7 +1348,7 @@ export default function App() {
 
         {/* ADMINISTRAÇÃO: IMPORTAÇÃO DE PLANILHAS */}
         {activeTab === "configuracoes" && currentUser && (
-          <Admin email={currentUser.email || ""} autorizado={isAdmin} />
+          <Admin email={currentUser.email || ""} perfil={perfil} />
         )}
 
       </main>

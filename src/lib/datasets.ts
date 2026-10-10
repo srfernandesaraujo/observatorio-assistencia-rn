@@ -11,92 +11,9 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
+import { type TemplateDataset } from "./templates";
 
-// Os formatos abaixo são provisórios: serão ajustados quando as fontes (SESAP-RN, SUAF etc.)
-// informarem o formato real dos dados.
-
-export type TipoColuna = "texto" | "numero" | "data" | "opcao";
-
-export interface ColunaTemplate {
-  id: string;
-  rotulo: string;
-  tipo: TipoColuna;
-  obrigatoria?: boolean;
-  opcoes?: string[];
-}
-
-export interface TemplateDataset {
-  id: string;
-  titulo: string;
-  descricao: string;
-  colunas: ColunaTemplate[];
-}
-
-export const TEMPLATES: TemplateDataset[] = [
-  {
-    id: "desabastecimento",
-    titulo: "Desabastecimento (componente especializado)",
-    descricao: "Situação de abastecimento de medicamentos por região de saúde.",
-    colunas: [
-      { id: "medicamento", rotulo: "Medicamento", tipo: "texto", obrigatoria: true },
-      { id: "principio_ativo", rotulo: "Princípio ativo", tipo: "texto" },
-      { id: "regiao_saude", rotulo: "Região de saúde", tipo: "texto" },
-      { id: "componente", rotulo: "Componente", tipo: "opcao", opcoes: ["Básico", "Estratégico", "Especializado"] },
-      { id: "situacao", rotulo: "Situação", tipo: "opcao", obrigatoria: true, opcoes: ["Em falta", "Estoque baixo", "Regular"] },
-      { id: "data_referencia", rotulo: "Data de referência", tipo: "data", obrigatoria: true },
-      { id: "observacao", rotulo: "Observação", tipo: "texto" },
-    ],
-  },
-  {
-    id: "pregoes",
-    titulo: "Pregões e compras",
-    descricao: "Acompanhamento de pregões, usado como justificativa de faltas.",
-    colunas: [
-      { id: "numero_pregao", rotulo: "Nº do pregão", tipo: "texto", obrigatoria: true },
-      { id: "item", rotulo: "Item", tipo: "texto", obrigatoria: true },
-      { id: "situacao", rotulo: "Situação", tipo: "texto" },
-      { id: "preco_registrado", rotulo: "Preço registrado (R$)", tipo: "numero" },
-      { id: "preco_cmed", rotulo: "Preço CMED (R$)", tipo: "numero" },
-      { id: "quantidade", rotulo: "Quantidade", tipo: "numero" },
-      { id: "data", rotulo: "Data", tipo: "data" },
-    ],
-  },
-  {
-    id: "custos",
-    titulo: "Custos da assistência farmacêutica",
-    descricao: "Série histórica anual por componente ou linha de cuidado.",
-    colunas: [
-      { id: "ano", rotulo: "Ano", tipo: "numero", obrigatoria: true },
-      { id: "categoria", rotulo: "Componente ou linha de cuidado", tipo: "texto", obrigatoria: true },
-      { id: "valor_total", rotulo: "Valor total (R$)", tipo: "numero", obrigatoria: true },
-    ],
-  },
-  {
-    id: "judicializacao",
-    titulo: "Judicialização (processos concluídos por ano)",
-    descricao: "Número anual de processos de saúde concluídos, a partir de fonte pública.",
-    colunas: [
-      { id: "ano", rotulo: "Ano", tipo: "numero", obrigatoria: true },
-      { id: "processos_concluidos", rotulo: "Processos concluídos", tipo: "numero", obrigatoria: true },
-    ],
-  },
-  {
-    id: "producao_cientifica",
-    titulo: "Produção científica",
-    descricao: "Artigos, dissertações e produtos técnicos do projeto.",
-    colunas: [
-      { id: "titulo", rotulo: "Título", tipo: "texto", obrigatoria: true },
-      { id: "tipo", rotulo: "Tipo", tipo: "opcao", obrigatoria: true, opcoes: ["Artigo", "Dissertação", "TCC", "Produto técnico", "Capítulo de livro"] },
-      { id: "autores", rotulo: "Autores", tipo: "texto", obrigatoria: true },
-      { id: "ano", rotulo: "Ano", tipo: "numero", obrigatoria: true },
-      { id: "link", rotulo: "Link", tipo: "texto" },
-    ],
-  },
-];
-
-export function getTemplate(id: string): TemplateDataset | undefined {
-  return TEMPLATES.find((t) => t.id === id);
-}
+export * from "./templates";
 
 export type Linha = Record<string, string | number | null>;
 
@@ -302,14 +219,4 @@ export async function lerDataset(templateId: string): Promise<{ meta: MetadadosD
   );
   const ordenados = blocos.docs.map((d) => d.data() as { indice: number; linhas: Linha[] }).sort((a, b) => a.indice - b.indice);
   return { meta, linhas: ordenados.flatMap((b) => b.linhas) };
-}
-
-export async function ehAdministrador(email: string | null | undefined): Promise<boolean> {
-  if (!email) return false;
-  try {
-    const snap = await getDoc(doc(db, "admins", email.toLowerCase()));
-    return snap.exists();
-  } catch {
-    return false;
-  }
 }

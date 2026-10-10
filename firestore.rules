@@ -8,28 +8,56 @@ service cloud.firestore {
     }
 
     function isSignedIn() {
-      return request.auth != null;
+      return request.auth != null && request.auth.token.email_verified == true;
     }
 
-    // Administradores são os e-mails (em minúsculas) cadastrados em /admins/{email}.
-    // O cadastro é feito pela coordenação (console/Admin SDK); o cliente não escreve em /admins.
-    function isAdmin() {
-      return isSignedIn()
-        && request.auth.token.email_verified == true
-        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email.lower()));
+    function emailLower() {
+      return request.auth.token.email.lower();
     }
 
-    // Cada pessoa só consegue ler o próprio cadastro (usado para saber se é administradora).
-    match /admins/{email} {
-      allow get: if isSignedIn() && request.auth.token.email.lower() == email;
-      allow list, write: if false;
+    // Super administração: conta fixa, a única que cadastra usuários.
+    // Para transferir o observatório a outra instituição, troque este e-mail.
+    function isSuper() {
+      return isSignedIn() && emailLower() == 'srfernandesaraujo@gmail.com';
     }
 
-    // Conjuntos de dados públicos: leitura aberta, publicação só por administradores.
+    function perfil() {
+      return get(/databases/$(database)/documents/users/$(emailLower())).data;
+    }
+
+    // Permissão para publicar um conjunto de dados (a permissão tem o mesmo id do conjunto).
+    function podePublicar(datasetId) {
+      return isSuper()
+        || (isSignedIn()
+            && exists(/databases/$(database)/documents/users/$(emailLower()))
+            && perfil().ativo == true
+            && perfil().permissoes.get(datasetId, false) == true);
+    }
+
+    // Cadastro de usuários: só a super administração escreve e lista;
+    // cada pessoa lê apenas o próprio cadastro.
+    match /users/{email} {
+      allow get: if isSuper() || (isSignedIn() && emailLower() == email);
+      allow list: if isSuper();
+      allow create, update: if isSuper()
+        && email == email.lower()
+        && request.resource.data.keys().hasOnly(['email', 'nome', 'papel', 'permissoes', 'ativo', 'criadoEm', 'criadoPor'])
+        && request.resource.data.email == email
+        && request.resource.data.nome is string
+        && request.resource.data.nome.size() > 0
+        && request.resource.data.nome.size() <= 120
+        && request.resource.data.papel in ['admin', 'professor', 'estudante']
+        && request.resource.data.ativo is bool
+        && request.resource.data.permissoes is map
+        && request.resource.data.permissoes.keys().hasOnly(['desabastecimento', 'pregoes', 'custos', 'judicializacao', 'producao_cientifica']);
+      allow delete: if isSuper();
+    }
+
+    // Conjuntos de dados públicos: leitura aberta, publicação conforme a permissão.
     match /datasets/{datasetId} {
       allow read: if true;
-      allow create, update: if isAdmin()
-        && request.resource.data.publicadoPor == request.auth.token.email.lower()
+      allow create, update: if podePublicar(datasetId)
+        && request.resource.data.publicadoPor == emailLower()
         && request.resource.data.fonte is string
         && request.resource.data.fonte.size() > 0
         && request.resource.data.fonte.size() <= 300
@@ -40,8 +68,8 @@ service cloud.firestore {
 
       match /chunks/{chunkId} {
         allow read: if true;
-        allow create, update: if isAdmin() && request.resource.data.linhas.size() <= 400;
-        allow delete: if isAdmin();
+        allow create, update: if podePublicar(datasetId) && request.resource.data.linhas.size() <= 400;
+        allow delete: if podePublicar(datasetId);
       }
     }
   }

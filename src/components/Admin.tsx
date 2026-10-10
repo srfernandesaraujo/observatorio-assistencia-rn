@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Usuarios } from "./Usuarios";
+import { SUPER_ADMIN_EMAIL, podeEditar, temAlgumAcesso, type Perfil } from "../lib/perfis";
 import { UploadCloud, FileSpreadsheet, CheckCircle, AlertTriangle, ShieldAlert } from "lucide-react";
 import {
   TEMPLATES,
@@ -7,16 +9,17 @@ import {
   publicarDataset,
   type Linha,
   type ResultadoLeitura,
+  type TemplateDataset,
 } from "../lib/datasets";
 
-interface Props {
+interface PropsImportar {
   email: string;
-  autorizado: boolean | null; // null = verificando
+  permitidos: TemplateDataset[]; // conjuntos que esta pessoa pode publicar
 }
 
-// Área administrativa: importação de planilhas (a v1 não tem inserção manual de dados).
-export function Admin({ email, autorizado }: Props) {
-  const [templateId, setTemplateId] = useState(TEMPLATES[0].id);
+// Importação de planilhas (a v1 não tem inserção manual de dados).
+function ImportarDados({ email, permitidos }: PropsImportar) {
+  const [templateId, setTemplateId] = useState(permitidos[0].id);
   const [arquivo, setArquivo] = useState<File | null>(null);
   const [leitura, setLeitura] = useState<ResultadoLeitura | null>(null);
   const [erro, setErro] = useState<string | null>(null);
@@ -27,22 +30,6 @@ export function Admin({ email, autorizado }: Props) {
   const [sucesso, setSucesso] = useState<string | null>(null);
 
   const template = getTemplate(templateId)!;
-
-  if (autorizado === null) {
-    return <p className="text-sm text-slate-500">Verificando permissões…</p>;
-  }
-  if (!autorizado) {
-    return (
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 max-w-xl space-y-2">
-        <p className="font-semibold text-amber-900 flex items-center gap-2">
-          <ShieldAlert className="h-5 w-5" /> Acesso restrito
-        </p>
-        <p className="text-sm text-amber-900">
-          A conta <strong>{email}</strong> não está na lista de administradores do observatório. Peça a inclusão à coordenação do projeto.
-        </p>
-      </div>
-    );
-  }
 
   const reiniciar = () => {
     setArquivo(null);
@@ -104,13 +91,13 @@ export function Admin({ email, autorizado }: Props) {
               }}
               className="mt-1 w-full border border-slate-200 rounded-lg px-3 py-2 text-xs bg-white"
             >
-              {TEMPLATES.map((t) => (
+              {permitidos.map((t) => (
                 <option key={t.id} value={t.id}>{t.titulo}</option>
               ))}
             </select>
           </label>
           <p className="text-[11px] text-slate-500">{template.descricao}</p>
-          <a href={`/modelos/${template.id}.csv`} download className="text-[11px] font-semibold text-blue-600 hover:underline">Baixar planilha-modelo (.csv)</a>
+          <a href={`/modelos/${template.id}.xlsx`} download className="text-[11px] font-semibold text-blue-600 hover:underline">Baixar planilha-modelo (.xlsx)</a>
           <p className="text-[11px] text-slate-500">
             <strong>Colunas esperadas</strong> (cabeçalho na 1ª linha):{" "}
             {template.colunas.map((c) => `${c.id}${c.obrigatoria ? "*" : ""}`).join(", ")}. As datas aceitam AAAA-MM-DD ou DD/MM/AAAA.
@@ -192,6 +179,60 @@ export function Admin({ email, autorizado }: Props) {
           )}
         </section>
       </div>
+    </div>
+  );
+}
+
+interface Props {
+  email: string;
+  perfil: Perfil | null; // null = verificando
+}
+
+type Aba = "importar" | "usuarios";
+
+// Área administrativa: importação de dados e (para a super administração) gestão de usuários.
+export function Admin({ email, perfil }: Props) {
+  const [aba, setAba] = useState<Aba>("importar");
+
+  if (perfil === null) {
+    return <p className="text-sm text-slate-500">Verificando permissões…</p>;
+  }
+  if (!temAlgumAcesso(perfil)) {
+    return (
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 max-w-xl space-y-2">
+        <p className="font-semibold text-amber-900 flex items-center gap-2">
+          <ShieldAlert className="h-5 w-5" /> Acesso restrito
+        </p>
+        <p className="text-sm text-amber-900">
+          A conta <strong>{email}</strong> não tem permissão de edição neste observatório. Peça o cadastro à coordenação do projeto.
+        </p>
+      </div>
+    );
+  }
+
+  const permitidos = TEMPLATES.filter((t) => podeEditar(perfil, t.id));
+  const abas: { id: Aba; rotulo: string }[] = [
+    { id: "importar", rotulo: "Importar dados" },
+    ...(perfil.superadmin ? [{ id: "usuarios" as Aba, rotulo: "Usuários e permissões" }] : []),
+  ];
+
+  return (
+    <div className="space-y-5">
+      <div className="flex gap-1 border-b border-slate-200">
+        {abas.map((a) => (
+          <button
+            key={a.id}
+            onClick={() => setAba(a.id)}
+            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px cursor-pointer ${aba === a.id ? "border-blue-600 text-blue-700" : "border-transparent text-slate-500 hover:text-slate-800"}`}
+          >
+            {a.rotulo}
+          </button>
+        ))}
+      </div>
+      {aba === "importar" && (permitidos.length > 0
+        ? <ImportarDados email={email} permitidos={permitidos} />
+        : <p className="text-sm text-slate-500">Sua conta ainda não tem permissão para publicar nenhum conjunto de dados.</p>)}
+      {aba === "usuarios" && perfil.superadmin && <Usuarios emailSuper={SUPER_ADMIN_EMAIL} />}
     </div>
   );
 }
