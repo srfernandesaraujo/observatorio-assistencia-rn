@@ -1,12 +1,26 @@
+import { useEffect, useState } from "react";
 import { Scale } from "lucide-react";
+import { lerDataset, type MetadadosDataset } from "../lib/datasets";
+import { SeloFonte } from "./SeloFonte";
 
-interface Props {
-  // Processos judiciais de saúde concluídos no ano; null enquanto a fonte pública (CNJ/DataJud) não estiver integrada.
-  processosConcluidosAno: number | null;
-  ano: number;
-}
+// Processos de saúde concluídos no ano mais recente publicado (fonte pública, ex.: CNJ/DataJud).
+export function Judicializacao() {
+  const [meta, setMeta] = useState<MetadadosDataset | null>(null);
+  const [ano, setAno] = useState<number | null>(null);
+  const [processosConcluidosAno, setProcessos] = useState<number | null>(null);
 
-export function Judicializacao({ processosConcluidosAno, ano }: Props) {
+  useEffect(() => {
+    lerDataset("judicializacao")
+      .then((r) => {
+        if (!r || r.linhas.length === 0) return;
+        const ultima = [...r.linhas].sort((a, b) => Number(b.ano) - Number(a.ano))[0];
+        setMeta(r.meta);
+        setAno(Number(ultima.ano));
+        setProcessos(Number(ultima.processos_concluidos));
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
@@ -18,14 +32,17 @@ export function Judicializacao({ processosConcluidosAno, ano }: Props) {
       </div>
 
       <div className="bg-purple-50 border border-purple-100 rounded-xl p-6 max-w-sm">
-        <p className="text-[10px] font-mono uppercase text-purple-700 font-bold">Processos concluídos em {ano}</p>
+        <p className="text-[10px] font-mono uppercase text-purple-700 font-bold">Processos concluídos{ano ? ` em ${ano}` : ""}</p>
         {processosConcluidosAno === null ? (
           <>
             <p className="text-2xl font-bold font-mono text-purple-300 mt-1">—</p>
-            <p className="text-[11px] text-purple-700 mt-2">Aguardando integração com fonte pública (CNJ/DataJud).</p>
+            <p className="text-[11px] text-purple-700 mt-2">Aguardando dados de fonte pública (CNJ/DataJud).</p>
           </>
         ) : (
-          <p className="text-3xl font-bold font-mono text-purple-800 mt-1">{processosConcluidosAno.toLocaleString("pt-BR")}</p>
+          <>
+            <p className="text-3xl font-bold font-mono text-purple-800 mt-1">{processosConcluidosAno.toLocaleString("pt-BR")}</p>
+            {meta && <div className="mt-3"><SeloFonte meta={meta} /></div>}
+          </>
         )}
       </div>
     </div>

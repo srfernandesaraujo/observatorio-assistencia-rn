@@ -50,3 +50,19 @@ Login Google: todo endereço novo onde o site rodar precisa estar em Firebase Au
 ## Limites do endpoint de IA
 
 `POST /api/ai/query` tem limites para proteger a cota da chave Gemini (variáveis de ambiente opcionais, valores padrão entre parênteses): `AI_MAX_QUERY_CHARS` (500), `AI_PER_IP_PER_MINUTE` (6), `AI_PER_IP_PER_DAY` (40), `AI_GLOBAL_PER_DAY` (400) e `AI_MAX_OUTPUT_TOKENS` (1500). Os contadores ficam em memória e valem por instância do Cloud Run. Defina também um orçamento com alerta de gastos no console do Google Cloud.
+
+## Testes das regras do Firestore
+
+Em `tests/firestore-rules` (dependências separadas, pois o pacote de testes exige outra versão do `firebase`):
+
+```
+cd tests/firestore-rules
+npm install
+RULES_PATH=../../firestore.rules npm test
+```
+
+Requer Java e a CLI do Firebase. Cobre leitura pública, escrita só por administradores e validações de tamanho e autoria.
+
+## Administradores
+
+Quem pode importar dados é definido pelos documentos `admins/{email-em-minúsculas}` no Firestore (o e-mail da conta Google precisa estar verificado). O cadastro é feito pela coordenação, pelo console do Firebase; o site não escreve nessa coleção.

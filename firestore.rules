@@ -1,53 +1,48 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // 1. Global Safety Net (Default Deny)
+
+    // Padrão: negar tudo.
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // Helper functions
     function isSignedIn() {
       return request.auth != null;
     }
 
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
+    // Administradores são os e-mails (em minúsculas) cadastrados em /admins/{email}.
+    // O cadastro é feito pela coordenação (console/Admin SDK); o cliente não escreve em /admins.
+    function isAdmin() {
+      return isSignedIn()
+        && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email.lower()));
     }
 
-    function isValidId(id) {
-      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    // Cada pessoa só consegue ler o próprio cadastro (usado para saber se é administradora).
+    match /admins/{email} {
+      allow get: if isSignedIn() && request.auth.token.email.lower() == email;
+      allow list, write: if false;
     }
 
-    function incoming() {
-      return request.resource.data;
-    }
-
-    function existing() {
-      return resource.data;
-    }
-
-    // Validation for Settings
-    function isValidUserSettings(data) {
-      return data.uid == request.auth.uid
-        && (data.horusUrl == null || (data.horusUrl is string && data.horusUrl.size() <= 256))
-        && (data.horusEnabled == null || data.horusEnabled is bool)
-        && (data.pgeUrl == null || (data.pgeUrl is string && data.pgeUrl.size() <= 256))
-        && (data.pgeEnabled == null || data.pgeEnabled is bool)
-        && (data.unicatUrl == null || (data.unicatUrl is string && data.unicatUrl.size() <= 256))
-        && (data.unicatEnabled == null || data.unicatEnabled is bool)
-        && (data.suvisaUrl == null || (data.suvisaUrl is string && data.suvisaUrl.size() <= 256))
-        && (data.suvisaEnabled == null || data.suvisaEnabled is bool)
-        && (data.syncFrequency == null || data.syncFrequency in ['realtime', 'hourly', 'daily', 'weekly']);
-    }
-
-    // Settings paths
-    match /settings/{userId} {
-      allow get: if isOwner(userId);
-      allow create: if isOwner(userId) && isValidUserSettings(incoming());
-      allow update: if isOwner(userId) && isValidUserSettings(incoming()) && incoming().uid == existing().uid;
+    // Conjuntos de dados públicos: leitura aberta, publicação só por administradores.
+    match /datasets/{datasetId} {
+      allow read: if true;
+      allow create, update: if isAdmin()
+        && request.resource.data.publicadoPor == request.auth.token.email.lower()
+        && request.resource.data.fonte is string
+        && request.resource.data.fonte.size() > 0
+        && request.resource.data.fonte.size() <= 300
+        && request.resource.data.versao is int
+        && request.resource.data.totalLinhas is int
+        && request.resource.data.totalLinhas <= 5000;
       allow delete: if false;
+
+      match /chunks/{chunkId} {
+        allow read: if true;
+        allow create, update: if isAdmin() && request.resource.data.linhas.size() <= 400;
+        allow delete: if isAdmin();
+      }
     }
   }
 }
