@@ -1,61 +1,27 @@
 {
   "entities": {
-    "user_settings": {
-      "title": "User Settings",
-      "description": "Application settings and configurations saved per user.",
-      "type": "object",
-      "properties": {
-        "uid": {
-          "type": "string",
-          "maxLength": 128
-        },
-        "horusUrl": {
-          "type": "string",
-          "maxLength": 256
-        },
-        "horusEnabled": {
-          "type": "boolean"
-        },
-        "pgeUrl": {
-          "type": "string",
-          "maxLength": 256
-        },
-        "pgeEnabled": {
-          "type": "boolean"
-        },
-        "unicatUrl": {
-          "type": "string",
-          "maxLength": 256
-        },
-        "unicatEnabled": {
-          "type": "boolean"
-        },
-        "suvisaUrl": {
-          "type": "string",
-          "maxLength": 256
-        },
-        "suvisaEnabled": {
-          "type": "boolean"
-        },
-        "syncFrequency": {
-          "type": "string",
-          "enum": [
-            "realtime",
-            "hourly",
-            "daily",
-            "weekly"
-          ]
-        }
-      },
-      "required": [
-        "uid"
-      ]
+    "dataset": {
+      "title": "Dataset",
+      "description": "Metadados de um conjunto de dados publicado (fonte, versão, atualização).",
+      "type": "object"
+    },
+    "admin": {
+      "title": "Admin",
+      "description": "Cadastro de administrador (id = e-mail em minúsculas).",
+      "type": "object"
     }
   },
   "firestore": {
-    "/settings/{userId}": {
-      "schema": "user_settings",
-      "description": "Collection of configurations stored on a per-user basis"
+    "/datasets/{datasetId}": {
+      "schema": "dataset",
+      "description": "Conjuntos de dados públicos; escrita só por administradores"
+    },
+    "/datasets/{datasetId}/chunks/{chunkId}": {
+      "description": "Linhas do conjunto, em blocos de até 400"
+    },
+    "/admins/{email}": {
+      "schema": "admin",
+      "description": "Lista de administradores"
     }
   }
 }

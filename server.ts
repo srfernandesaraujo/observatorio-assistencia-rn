@@ -192,49 +192,6 @@ async function startServer() {
     }
   });
 
-  // 5. Explorador de Dados Relacionais Brutos
-  app.get("/api/dashboard/data-explorer", (req, res) => {
-    res.json({
-      medicamentos: MEDICAMENTOS_MOCK,
-      instituicoes: INSTITUICOES_MOCK,
-      estoques: ESTOQUES_MOCK,
-      movimentacoes: MOVIMENTACOES_MOCK
-    });
-  });
-
-  // 6. Rota para Ingestão de Dados (Simulação de ETL)
-  app.post("/api/ingestion/upload", (req, res) => {
-    try {
-      const { fileName, fileSize, recordsCount, dataType } = req.body;
-
-      if (!fileName || !recordsCount || !dataType) {
-        return res.status(400).json({ error: "Parâmetros de ingestão inválidos." });
-      }
-
-      // Log operacional simulando o pipeline ETL em tempo real
-      const logs = [
-        `[${new Date().toISOString()}] [ETL-EXTRACT] Iniciando ingestão do arquivo "${fileName}" (${(fileSize / 1024).toFixed(2)} KB).`,
-        `[${new Date().toISOString()}] [ETL-EXTRACT] Identificado formato correspondente a: ${dataType.toUpperCase()}.`,
-        `[${new Date().toISOString()}] [ETL-EXTRACT] Extraídos com sucesso ${recordsCount} registros brutos.`,
-        `[${new Date().toISOString()}] [ETL-TRANSFORM] Iniciando validação sintática e semântica de integridade.`,
-        `[${new Date().toISOString()}] [ETL-TRANSFORM] Cruzando dados com Cadastro Nacional de Medicamentos (Anvisa) e CNES.`,
-        `[${new Date().toISOString()}] [ETL-TRANSFORM] Calculando médias móveis e demanda mensal projetada...`,
-        `[${new Date().toISOString()}] [ETL-LOAD] Gravando alterações nas tabelas de Estoque (estoques) e Histórico (movimentacoes).`,
-        `[${new Date().toISOString()}] [ETL-SUCCESS] Carga concluída com sucesso. 0 erros de integridade referencial.`
-      ];
-
-      res.json({
-        success: true,
-        fileName,
-        recordsProcessed: recordsCount,
-        timestamp: new Date().toISOString(),
-        logs
-      });
-    } catch (error: any) {
-      res.status(500).json({ error: "Falha na simulação de ingestão", details: error.message });
-    }
-  });
-
   // 7. Rota de Inteligência Artificial para Consulta em Linguagem Natural
   app.post("/api/ai/query", async (req, res) => {
     try {
