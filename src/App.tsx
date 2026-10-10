@@ -1,6 +1,6 @@
 import { ProgramasGovernamentais } from "./components/ProgramasGovernamentais";
 import { Judicializacao } from "./components/Judicializacao";
-import { Landing } from "./components/Landing";
+import { Landing, type Destino } from "./components/Landing";
 import { Admin } from "./components/Admin";
 import { Comparador } from "./components/Comparador";
 import { AlertasSanitarios } from "./components/AlertasSanitarios";
@@ -162,6 +162,7 @@ export default function App() {
   const topNav: { id: TopNavId; label: string; icon: any }[] = [
     { id: "inicio", label: "Início", icon: Home },
     { id: "indicadores", label: "Indicadores", icon: Activity },
+    { id: "programas", label: "Programas Governamentais", icon: Map },
     { id: "educacao", label: "Educação e Repositório", icon: BookOpen },
     { id: "impacto", label: "Relatório de Impacto", icon: Heart },
     { id: "producao", label: "Produção Científica", icon: FileText },
@@ -175,6 +176,23 @@ export default function App() {
     : activeRnSubTab === "programas" ? "programas"
     : activeRnSubTab === "repositorio" ? "educacao"
     : "impacto";
+  // Atalhos da página inicial: abrem uma seção específica de Indicadores ou outra área.
+  const abrir = (d: Destino) => {
+    if (d === "assistente") return setIsChatOpen(true);
+    const sub: Record<string, string> = {
+      indicadores: "visao_geral",
+      comparador: "comparador",
+      desabastecimento: "desabastecimento",
+      alertas: "alertas",
+      programas: "programas",
+      educacao: "repositorio",
+      impacto: "relatorio_impacto",
+    };
+    if (d === "producao") return setActiveTab("producao");
+    setActiveTab("principal");
+    setActiveRnSubTab(sub[d]);
+    window.scrollTo({ top: 0 });
+  };
   const goTo = (id: TopNavId) => {
     if (id === "inicio") setActiveTab("inicio");
     else if (id === "producao") setActiveTab("producao");
@@ -434,15 +452,6 @@ export default function App() {
             <Calendar className="h-3.5 w-3.5 text-slate-500" />
             <span>{new Date().toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" })}</span>
           </div>
-          <div className="hidden md:block h-3 w-px bg-slate-200" />
-          <button 
-            onClick={loadDashboardData}
-            className="flex items-center gap-1 hover:text-blue-600 transition-colors cursor-pointer"
-            title="Recarregar dados do servidor"
-          >
-            <RefreshCw className={`h-3 w-3 ${loading ? 'animate-spin' : ''}`} />
-            Sincronizar
-          </button>
         </div>
       </header>
 
@@ -469,7 +478,7 @@ export default function App() {
       <main className="flex-1 p-6 max-w-7xl w-full mx-auto flex flex-col gap-6">
 
         {/* INÍCIO: LANDING PAGE INSTITUCIONAL */}
-        {activeTab === "inicio" && <Landing onNavigate={(d) => goTo(d)} />}
+        {activeTab === "inicio" && <Landing onNavigate={abrir} />}
 
         {/* PRODUÇÃO CIENTÍFICA */}
         {activeTab === "producao" && (
@@ -501,9 +510,9 @@ export default function App() {
             {/* SIDEBAR SUB-TABS SELECTOR (ALWAYS VISIBLE) */}
             <div className={isIndicadores ? "lg:col-span-1 bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-1 md:sticky md:top-[140px] z-20 font-sans" : "hidden"}>
               <div className="pb-3 border-b border-slate-100 mb-3">
-                <span className="text-[9px] uppercase font-mono tracking-wider font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">SESAP / UNICAT-RN</span>
-                <h3 className="font-display font-bold text-sm text-slate-900 mt-2 font-sans">Módulos Estratégicos</h3>
-                <p className="text-[10px] text-slate-500 font-sans">Planejamento e Gestão Farmacêutica</p>
+                <span className="text-[9px] uppercase font-mono tracking-wider font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">INDICADORES</span>
+                <h3 className="font-display font-bold text-sm text-slate-900 mt-2 font-sans">Indicadores</h3>
+                <p className="text-[10px] text-slate-500 font-sans">Dados com fonte e data de atualização</p>
               </div>
               {[
                 { id: "visao_geral", label: "Visão Geral e Alertas", icon: Activity, hover: "hover:bg-blue-50 hover:text-blue-600" },
@@ -1503,14 +1512,10 @@ export default function App() {
       {/* FOOTER */}
       <footer className="mt-auto border-t border-slate-200 py-6 px-6 bg-white text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-7xl w-full mx-auto">
         <div>
-          <span>© 2026 Observatório da Assistência Farmacêutica • Ministério da Saúde / SUS • Solução em Nuvem Segura</span>
+          <span>© 2026 Observatório da Assistência Farmacêutica do RN • Dados com fonte e data de atualização</span>
         </div>
-        <div className="flex gap-4 font-mono">
-          <span>v2.5.0-Release</span>
-          <span>•</span>
-          <span className="text-blue-600 font-semibold flex items-center gap-1">
-            <CheckCircle className="h-3.5 w-3.5 text-blue-600" /> Linter e Compilação: OK
-          </span>
+        <div className="font-mono">
+          <span>Projeto em desenvolvimento</span>
         </div>
       </footer>
 
