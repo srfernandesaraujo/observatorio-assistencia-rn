@@ -24,7 +24,7 @@ Para migrar para outra instituição (SESAP-RN, UFRN etc.): criar um projeto Fir
 
 ## Estado
 
-Em desenvolvimento. Os dados em `src/data.ts` e `src/rnData.ts` são ilustrativos (fictícios) e serão substituídos por fontes reais.
+Em desenvolvimento. O site não exibe dados de exemplo: toda informação vem de uma fonte identificada (API pública ou planilha importada pela equipe) e mostra fonte e data de atualização; onde ainda não há dado, a seção informa que está aguardando a fonte.
 
 ## Publicação
 

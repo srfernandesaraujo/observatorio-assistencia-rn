@@ -198,7 +198,7 @@ export function Landing({ onNavigate }: Props) {
           })}
         </ul>
         <p className="text-[11px] text-slate-400">
-          Demografia: {FONTE_IBGE.rotulo}. Os indicadores da aba Indicadores que ainda não vieram de fonte oficial aparecem com o aviso "dados ilustrativos".
+          Demografia: {FONTE_IBGE.rotulo}. O observatório não exibe dados de exemplo: onde a fonte ainda não enviou informações, a seção informa que está aguardando.
         </p>
       </section>
     </div>
