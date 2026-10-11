@@ -1,4 +1,5 @@
 import { PROGRAMAS_GOVERNAMENTAIS } from "../content/programas";
+import { GLOSSARIO } from "../content/metodologia";
 import { lerDataset, type Linha } from "./datasets";
 import { normalizar } from "./texto";
 
@@ -39,6 +40,7 @@ const SECOES: { titulo: string; trecho: string; rota: Rota; palavras: string }[]
   { titulo: "Programas Governamentais", trecho: "Como obter medicamentos pelo SUS e programas do governo.", rota: { aba: "principal", sub: "programas" }, palavras: "sus acesso obter remedio" },
   { titulo: "Educação e Repositório", trecho: "Documentos oficiais, protocolos e materiais educativos.", rota: { aba: "principal", sub: "repositorio" }, palavras: "documento pcdt protocolo legislacao nota tecnica" },
   { titulo: "Relatório de impacto", trecho: "Relatório de impacto (em elaboração).", rota: { aba: "principal", sub: "relatorio_impacto" }, palavras: "impacto resultado" },
+  { titulo: "Metodologia e glossário", trecho: "De onde vêm os dados, como são tratados e o significado dos termos.", rota: { aba: "principal", sub: "metodologia" }, palavras: "fonte metodologia glossario termos significado sigla como funciona" },
   { titulo: "Produção Científica", trecho: "Artigos, dissertações e produtos técnicos do projeto.", rota: { aba: "producao" }, palavras: "artigo dissertacao tcc pesquisa" },
 ];
 
@@ -56,7 +58,10 @@ export function indiceEstatico(): EntradaBusca[] {
       extra: `${p.ondeObter} ${p.comoAcessar.join(" ")} ${p.esfera}`,
     })
   );
-  return [...secoes, ...programas];
+  const glossario = GLOSSARIO.map((t, i) =>
+    entrada({ id: `termo-${i}`, titulo: t.termo, trecho: t.definicao, grupo: "Glossário", rota: { aba: "principal", sub: "metodologia" } })
+  );
+  return [...secoes, ...programas, ...glossario];
 }
 
 const s = (v: unknown) => String(v ?? "").trim();

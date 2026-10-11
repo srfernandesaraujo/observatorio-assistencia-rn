@@ -10,6 +10,7 @@ import { TabelaDataset } from "./components/TabelaDataset";
 import { PainelAcessibilidade } from "./components/PainelAcessibilidade";
 import { BuscaGeral } from "./components/BuscaGeral";
 import { ConsultaCmed } from "./components/ConsultaCmed";
+import { Metodologia } from "./components/Metodologia";
 import type { Rota } from "./lib/busca";
 import { lerPerfil, type Perfil } from "./lib/perfis";
 import { EmElaboracao } from "./components/EmElaboracao";
@@ -29,6 +30,7 @@ import {
   ShieldAlert,
   Coins,
   Pill,
+  BookText,
   ShieldCheck,
   Scale,
   BookOpen,
@@ -84,7 +86,7 @@ export default function App() {
   const [anuncio, setAnuncio] = useState("");
 
   // Navegação superior: cada item abre uma área; "indicadores" mostra a barra lateral de módulos.
-  type TopNavId = "inicio" | "indicadores" | "programas" | "educacao" | "impacto" | "producao" | "admin";
+  type TopNavId = "inicio" | "indicadores" | "programas" | "educacao" | "impacto" | "producao" | "metodologia" | "admin";
   const INDICADORES_SUBTABS = ["visao_geral", "comparador", "desabastecimento", "alertas", "cmed", "custos", "qualidade", "judicializacao", "ats_farmacovigilancia"];
   const isIndicadores = activeTab === "principal" && INDICADORES_SUBTABS.includes(activeRnSubTab);
   const topNav: { id: TopNavId; label: string; icon: any }[] = [
@@ -94,6 +96,7 @@ export default function App() {
     { id: "educacao", label: "Educação e Repositório", icon: BookOpen },
     { id: "impacto", label: "Relatório de Impacto", icon: Heart },
     { id: "producao", label: "Produção Científica", icon: FileText },
+    { id: "metodologia", label: "Metodologia e glossário", icon: BookText },
     ...(currentUser ? [{ id: "admin" as TopNavId, label: "Administração", icon: Settings }] : []),
   ];
   const currentTopNav: TopNavId =
@@ -103,6 +106,7 @@ export default function App() {
     : isIndicadores ? "indicadores"
     : activeRnSubTab === "programas" ? "programas"
     : activeRnSubTab === "repositorio" ? "educacao"
+    : activeRnSubTab === "metodologia" ? "metodologia"
     : "impacto";
   const NOMES_SUB: Record<string, string> = {
     visao_geral: "Visão geral dos indicadores",
@@ -117,6 +121,7 @@ export default function App() {
     programas: "Programas Governamentais",
     repositorio: "Educação e Repositório",
     relatorio_impacto: "Relatório de impacto",
+    metodologia: "Metodologia e glossário",
   };
   const secaoAtual =
     activeTab === "inicio" ? "Início"
@@ -191,7 +196,7 @@ export default function App() {
     else if (id === "admin") setActiveTab("configuracoes");
     else {
       setActiveTab("principal");
-      setActiveRnSubTab(id === "indicadores" ? "visao_geral" : id === "programas" ? "programas" : id === "educacao" ? "repositorio" : "relatorio_impacto");
+      setActiveRnSubTab(id === "indicadores" ? "visao_geral" : id === "programas" ? "programas" : id === "educacao" ? "repositorio" : id === "metodologia" ? "metodologia" : "relatorio_impacto");
     }
   };
 
@@ -445,6 +450,7 @@ export default function App() {
               )}
               {activeRnSubTab === "programas" && <ProgramasGovernamentais />}
               {activeRnSubTab === "repositorio" && <Repositorio />}
+              {activeRnSubTab === "metodologia" && <Metodologia />}
               {activeRnSubTab === "relatorio_impacto" && (
                 <EmElaboracao titulo="Relatório de impacto" texto="O relatório de impacto será elaborado com dados verificados e metodologia aberta." />
               )}
@@ -608,7 +614,8 @@ export default function App() {
         <div>
           <span>© 2026 Observatório da Assistência Farmacêutica do RN • Dados com fonte e data de atualização</span>
         </div>
-        <div className="font-mono">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-mono">
+          <button type="button" onClick={() => irPara({ aba: "principal", sub: "metodologia" })} className="py-1.5 text-blue-700 hover:underline cursor-pointer">Metodologia e glossário</button>
           <span>Projeto em desenvolvimento</span>
         </div>
       </footer>
