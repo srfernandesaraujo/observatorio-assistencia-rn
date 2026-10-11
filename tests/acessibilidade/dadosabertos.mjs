@@ -28,6 +28,12 @@ for (const viewport of [{ width: 1366, height: 900 }, { width: 390, height: 800 
   ok(publicados >= 1, `${rotulo}: ${publicados} conjunto(s) publicado(s) com botão de download`);
   ok((await p.getByText("Aguardando dados da fonte").count()) === 9 - publicados, `${rotulo}: os demais mostram "aguardando dados"`);
 
+  // Os dois botões ficam lado a lado (mesma altura na tela), sem quebrar para baixo
+  const linhaRepo = p.locator("table tbody tr", { hasText: "Repositório de documentos" });
+  const boxCsv = await linhaRepo.getByRole("button", { name: /em CSV$/ }).boundingBox();
+  const boxJson = await linhaRepo.getByRole("button", { name: /em JSON$/ }).boundingBox();
+  ok(!!boxCsv && !!boxJson && Math.abs(boxCsv.y - boxJson.y) < 2 && boxJson.x > boxCsv.x, `${rotulo}: botões CSV e JSON lado a lado`);
+
   // Download do repositório (16 linhas publicadas)
   const [dlCsv] = await Promise.all([p.waitForEvent("download"), p.getByRole("button", { name: "Baixar Repositório de documentos em CSV" }).click()]);
   const caminhoCsv = await dlCsv.path();

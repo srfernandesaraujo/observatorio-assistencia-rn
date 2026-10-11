@@ -71,7 +71,7 @@ export function DadosAbertos() {
                   <th scope="col" className="py-2 pr-3 font-normal">Conjunto</th>
                   <th scope="col" className="py-2 pr-3 font-normal">Fonte e atualização</th>
                   <th scope="col" className="py-2 pr-3 font-normal text-right">Linhas</th>
-                  <th scope="col" className="py-2 font-normal">Baixar</th>
+                  <th scope="col" className="py-2 font-normal whitespace-nowrap">Baixar</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -99,7 +99,7 @@ export function DadosAbertos() {
                       <td className="py-3 pr-3 text-right whitespace-nowrap">{publicado ? meta!.totalLinhas.toLocaleString("pt-BR") : "—"}</td>
                       <td className="py-3">
                         {publicado ? (
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-nowrap gap-2">
                             {(["csv", "json"] as const).map((f) => (
                               <button
                                 key={f}
@@ -133,6 +133,13 @@ export function DadosAbertos() {
           <li>
             <strong>Preços de medicamentos (CMED/Anvisa):</strong> a tabela completa é publicada pela própria Anvisa.{" "}
             <a href={URL_CMED_CSV} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 py-1 font-semibold text-blue-700 hover:underline">
+              Baixar na fonte <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              <span className="sr-only"> (abre em nova aba)</span>
+            </a>
+          </li>
+          <li>
+            <strong>Registros de medicamentos (Anvisa):</strong> o arquivo completo também é publicado pela própria Anvisa.{" "}
+            <a href="https://dados.anvisa.gov.br/dados/DADOS_ABERTOS_MEDICAMENTOS.csv" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 py-1 font-semibold text-blue-700 hover:underline">
               Baixar na fonte <ExternalLink className="h-3 w-3" aria-hidden="true" />
               <span className="sr-only"> (abre em nova aba)</span>
             </a>
