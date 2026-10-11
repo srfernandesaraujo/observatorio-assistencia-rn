@@ -8,6 +8,8 @@ import { VisaoGeral } from "./components/VisaoGeral";
 import { AlertasSanitarios } from "./components/AlertasSanitarios";
 import { TabelaDataset } from "./components/TabelaDataset";
 import { PainelAcessibilidade } from "./components/PainelAcessibilidade";
+import { BuscaGeral } from "./components/BuscaGeral";
+import type { Rota } from "./lib/busca";
 import { lerPerfil, type Perfil } from "./lib/perfis";
 import { EmElaboracao } from "./components/EmElaboracao";
 import { useState, useEffect, useRef } from "react";
@@ -176,6 +178,10 @@ export default function App() {
     setActiveTab("principal");
     setActiveRnSubTab(sub[d]);
   };
+  const irPara = (r: Rota) => {
+    setActiveTab(r.aba);
+    if (r.sub) setActiveRnSubTab(r.sub);
+  };
   const goTo = (id: TopNavId) => {
     if (id === "inicio") setActiveTab("inicio");
     else if (id === "producao") setActiveTab("producao");
@@ -304,6 +310,7 @@ export default function App() {
 
         {/* METADATA INFO */}
         <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-500 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm">
+          <BuscaGeral onIr={irPara} />
           <PainelAcessibilidade />
           <div className="hidden sm:block h-5 w-px bg-slate-300" />
           {currentUser ? (
