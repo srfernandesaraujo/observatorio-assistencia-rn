@@ -32,11 +32,11 @@ export function Judicializacao() {
       </div>
 
       <div className="bg-purple-50 border border-purple-100 rounded-xl p-6 max-w-sm">
-        <p className="text-[10px] font-mono uppercase text-purple-700 font-bold">Processos concluídos{ano ? ` em ${ano}` : ""}</p>
+        <p className="text-[0.75rem] font-mono uppercase text-purple-700 font-bold">Processos concluídos{ano ? ` em ${ano}` : ""}</p>
         {processosConcluidosAno === null ? (
           <>
             <p className="text-2xl font-bold font-mono text-purple-300 mt-1">—</p>
-            <p className="text-[11px] text-purple-700 mt-2">Aguardando dados de fonte pública (CNJ/DataJud).</p>
+            <p className="text-[0.75rem] text-purple-700 mt-2">Aguardando dados de fonte pública (CNJ/DataJud).</p>
           </>
         ) : (
           <>

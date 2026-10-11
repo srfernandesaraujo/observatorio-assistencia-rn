@@ -70,3 +70,11 @@ A conta **srfernandesaraujo@gmail.com** é a super administração (fixa, també
 ## Planilhas-modelo
 
 As planilhas em `public/modelos/*.xlsx` são geradas por `npm run modelos` a partir dos formatos em `src/lib/templates.ts`. Ao mudar um formato, rode o comando e publique o site.
+
+## Acessibilidade
+
+Recursos para o visitante (botão "Acessibilidade" no cabeçalho; as escolhas ficam só no navegador): tamanho do texto (100% a 175%), alto contraste, espaçamento de texto ampliado, redução de animações e tradução em Libras (VLibras, serviço do governo federal, carregado só se o visitante ativar). Também: link "Ir para o conteúdo", foco visível, navegação completa pelo teclado, título da aba e anúncio para leitores de tela a cada mudança de seção, janela do assistente com foco preso e Esc para fechar, idioma da página em pt-BR e tamanhos de texto em rem (mínimo 12 px).
+
+Como manter: use cores de texto com contraste mínimo AA (nada mais claro que `text-slate-500` sobre branco); tamanhos de texto em rem (não use `text-[Npx]`); toda ação com nome acessível; links que abrem em outra aba avisam com texto para leitor de tela. O modo de alto contraste redefine as variáveis de cor do Tailwind em `src/alto-contraste.css`; ao usar uma família de cor nova, inclua-a lá.
+
+Testes automáticos em `tests/acessibilidade` (axe-core + Playwright; `npm install`, `npx playwright install chromium`): `node axe.mjs <url> padrao|contraste` (violações WCAG A/AA/2.2), `node funcional.mjs <url>` (teclado, painel, persistência, chat, Libras) e `node reflow.mjs <url>` (sem rolagem horizontal em 320 px). Rodar a cada mudança de interface, no site publicado e em `npx vite preview --port 4173`. Limite: testes automáticos não substituem uma validação com pessoas usuárias de leitores de tela (NVDA/VoiceOver) e de Libras.

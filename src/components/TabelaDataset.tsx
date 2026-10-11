@@ -35,8 +35,8 @@ export function TabelaDataset({ templateId, titulo }: Props) {
 
   return (
     <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
-      <h3 className="font-semibold text-xs text-slate-900 uppercase font-mono tracking-wider">{titulo ?? template.titulo}</h3>
-      {estado === "carregando" && <p className="text-xs text-slate-400">Carregando…</p>}
+      <h2 className="font-semibold text-xs text-slate-900 uppercase font-mono tracking-wider">{titulo ?? template.titulo}</h2>
+      {estado === "carregando" && <p className="text-xs text-slate-500">Carregando…</p>}
       {estado === "erro" && <p className="text-xs text-red-600">Não foi possível carregar os dados agora.</p>}
       {estado === "vazio" && (
         <p className="text-xs text-slate-500">Aguardando dados oficiais. Esta seção será preenchida quando a fonte for integrada.</p>
@@ -44,10 +44,10 @@ export function TabelaDataset({ templateId, titulo }: Props) {
       {estado === "ok" && meta && (
         <>
           <SeloFonte meta={meta} />
-          <div className="overflow-x-auto max-h-96">
+          <div className="overflow-x-auto max-h-96" tabIndex={0} role="region" aria-label="Tabela de dados (use as setas para rolar)">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-100 text-slate-400 font-mono">
+                <tr className="border-b border-slate-100 text-slate-500 font-mono">
                   {colunas.map((c) => (
                     <th key={c.id} className="py-2 pr-3 font-normal whitespace-nowrap">{c.rotulo}</th>
                   ))}

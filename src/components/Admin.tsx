@@ -105,32 +105,32 @@ function ImportarDados({ email, permitidos }: PropsImportar) {
               ))}
             </select>
           </label>
-          <p className="text-[11px] text-slate-500">{template.descricao}</p>
-          <a href={`/modelos/${template.id}.xlsx`} download className="text-[11px] font-semibold text-blue-600 hover:underline">Baixar planilha-modelo (.xlsx)</a>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[0.75rem] text-slate-500">{template.descricao}</p>
+          <a href={`/modelos/${template.id}.xlsx`} download className="text-[0.75rem] font-semibold text-blue-600 hover:underline">Baixar planilha-modelo (.xlsx)</a>
+          <p className="text-[0.75rem] text-slate-500">
             <strong>Colunas esperadas</strong> (cabeçalho na 1ª linha):{" "}
             {template.colunas.map((c) => `${c.id}${c.obrigatoria ? "*" : ""}`).join(", ")}. As datas aceitam AAAA-MM-DD ou DD/MM/AAAA.
           </p>
 
           <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl p-5 cursor-pointer text-center">
-            {arquivo ? <FileSpreadsheet className="h-8 w-8 text-blue-600" /> : <UploadCloud className="h-8 w-8 text-slate-400" />}
+            {arquivo ? <FileSpreadsheet className="h-8 w-8 text-blue-600" /> : <UploadCloud className="h-8 w-8 text-slate-500" />}
             <span className="text-xs text-slate-600">{arquivo ? arquivo.name : "Selecione um arquivo .csv ou .xlsx"}</span>
             <input type="file" accept=".csv,.xlsx" className="hidden" onChange={(e) => aoEscolherArquivo(e.target.files?.[0] ?? null)} />
           </label>
 
           <div className="space-y-2">
-            <input value={fonte} onChange={(e) => setFonte(e.target.value)} placeholder="Fonte (obrigatório). Ex.: SESAP-RN / CESAP"
+            <input aria-label="Fonte dos dados (obrigatório)" value={fonte} onChange={(e) => setFonte(e.target.value)} placeholder="Fonte (obrigatório). Ex.: SESAP-RN / CESAP"
               className="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs" />
-            <input value={urlFonte} onChange={(e) => setUrlFonte(e.target.value)} placeholder="Link da fonte (opcional)"
+            <input aria-label="Link da fonte (opcional)" value={urlFonte} onChange={(e) => setUrlFonte(e.target.value)} placeholder="Link da fonte (opcional)"
               className="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs" />
-            <input value={periodo} onChange={(e) => setPeriodo(e.target.value)} placeholder="Período dos dados. Ex.: 2025 ou jan–jun/2026"
+            <input aria-label="Período dos dados" value={periodo} onChange={(e) => setPeriodo(e.target.value)} placeholder="Período dos dados. Ex.: 2025 ou jan–jun/2026"
               className="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs" />
           </div>
 
           <button
             onClick={publicar}
             disabled={!podePublicar}
-            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white text-sm font-semibold rounded-lg cursor-pointer disabled:cursor-not-allowed"
+            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-500 text-white text-sm font-semibold rounded-lg cursor-pointer disabled:cursor-not-allowed"
           >
             {publicando ? "Publicando…" : "Publicar dados"}
           </button>
@@ -164,13 +164,13 @@ function ImportarDados({ email, permitidos }: PropsImportar) {
                 </ul>
               )}
               {leitura.erros.length > 0 && (
-                <p className="text-[11px] text-slate-500">Corrija a planilha e envie novamente. Nada é publicado enquanto houver erros.</p>
+                <p className="text-[0.75rem] text-slate-500">Corrija a planilha e envie novamente. Nada é publicado enquanto houver erros.</p>
               )}
               {previa.length > 0 && (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Tabela de dados (use as setas para rolar)">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr className="border-b border-slate-100 text-slate-400 font-mono">
+                      <tr className="border-b border-slate-100 text-slate-500 font-mono">
                         {template.colunas.map((c) => <th key={c.id} className="py-2 pr-3 font-normal whitespace-nowrap">{c.rotulo}</th>)}
                       </tr>
                     </thead>

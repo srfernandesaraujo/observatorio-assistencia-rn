@@ -79,7 +79,7 @@ export function Comparador() {
     return <p className="text-sm text-red-600 bg-white border border-slate-200 rounded-xl p-6">Não foi possível carregar a lista de municípios do IBGE agora. Tente novamente em instantes.</p>;
   }
   if (!municipios || !indicador || anoAtual === null) {
-    return <p className="text-sm text-slate-400">Carregando municípios…</p>;
+    return <p className="text-sm text-slate-500">Carregando municípios…</p>;
   }
 
   const usaPorHabitante = porDezMil && indicador.permitePorHabitante;
@@ -132,7 +132,7 @@ export function Comparador() {
                     <option key={m.codigo} value={m.codigo}>{m.nome}</option>
                   ))}
                 </select>
-                <Plus className="h-3.5 w-3.5 text-slate-400" />
+                <Plus className="h-3.5 w-3.5 text-slate-500" />
               </span>
             )}
           </div>
@@ -184,9 +184,9 @@ export function Comparador() {
       <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h3 className="font-semibold text-sm text-slate-900">
-            {indicador.nome} <span className="text-slate-400 font-normal">({anoAtual})</span>
+            {indicador.nome} <span className="text-slate-500 font-normal">({anoAtual})</span>
           </h3>
-          {unidadeExibida && <span className="text-[11px] text-slate-500 font-mono">{unidadeExibida}</span>}
+          {unidadeExibida && <span className="text-[0.75rem] text-slate-500 font-mono">{unidadeExibida}</span>}
         </div>
 
         {selecionados.length === 0 ? (
@@ -198,7 +198,7 @@ export function Comparador() {
                 <div className="flex items-baseline justify-between text-xs mb-1 gap-3">
                   <span className={b.tipo === "referencia" ? "text-slate-500 italic" : "font-medium text-slate-800"}>
                     {b.rotulo}
-                    {b.detalhe && <span className="text-[10px] text-slate-400 font-normal not-italic"> · {b.detalhe}</span>}
+                    {b.detalhe && <span className="text-[0.75rem] text-slate-500 font-normal not-italic"> · {b.detalhe}</span>}
                   </span>
                   <span className="font-mono text-slate-700 shrink-0">{formatarValor(b.valor, usaPorHabitante ? 2 : 1)}</span>
                 </div>
@@ -215,24 +215,24 @@ export function Comparador() {
 
         <div className="pt-2 border-t border-slate-100 space-y-1">
           {indicador.origem === "ibge" ? (
-            <p className="text-[11px] text-slate-500 flex flex-wrap items-center gap-x-1.5">
+            <p className="text-[0.75rem] text-slate-500 flex flex-wrap items-center gap-x-1.5">
               <strong className="text-slate-700">Fonte:</strong> {FONTE_IBGE.rotulo}
               <a href={FONTE_IBGE.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-0.5 text-blue-600 hover:underline">
-                Ver fonte <ExternalLink className="h-3 w-3" />
+                Ver fonte <ExternalLink className="h-3 w-3" aria-hidden="true" /><span className="sr-only"> (abre em nova aba)</span>
               </a>
             </p>
           ) : (
             metaInd && <SeloFonte meta={metaInd} />
           )}
           {regioes.size > 0 && metaReg ? (
-            <p className="text-[11px] text-slate-500">Regiões de saúde: {metaReg.fonte}, atualizado em {new Date(metaReg.atualizadoEm).toLocaleDateString("pt-BR")}.</p>
+            <p className="text-[0.75rem] text-slate-500">Regiões de saúde: {metaReg.fonte}, atualizado em {new Date(metaReg.atualizadoEm).toLocaleDateString("pt-BR")}.</p>
           ) : (
-            <p className="text-[11px] text-slate-400 flex items-center gap-1">
+            <p className="text-[0.75rem] text-slate-500 flex items-center gap-1">
               <Info className="h-3 w-3" /> A comparação por região de saúde aparece quando o vínculo oficial município-região for publicado.
             </p>
           )}
           {naoReconhecidos.length > 0 && (
-            <p className="text-[11px] text-amber-700">
+            <p className="text-[0.75rem] text-amber-700">
               Atenção: {naoReconhecidos.length} nome(s) de município no arquivo importado não foram reconhecidos e ficaram fora da comparação: {naoReconhecidos.slice(0, 5).join(", ")}
               {naoReconhecidos.length > 5 ? "…" : ""}.
             </p>
@@ -242,16 +242,16 @@ export function Comparador() {
 
       <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-2">
         <h3 className="font-semibold text-xs text-slate-900 uppercase font-mono tracking-wider">Dados dos municípios (IBGE, Censo 2022)</h3>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Tabela de dados (use as setas para rolar)">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-100 text-slate-400 font-mono">
-                <th className="py-2 pr-3 font-normal">Município</th>
-                <th className="py-2 pr-3 font-normal">Região de saúde</th>
-                <th className="py-2 pr-3 font-normal text-right">População</th>
-                <th className="py-2 pr-3 font-normal text-right">Área (km²)</th>
-                <th className="py-2 pr-3 font-normal text-right">Densidade (hab/km²)</th>
-                <th className="py-2 font-normal text-right">{indicador.nome}</th>
+              <tr className="border-b border-slate-100 text-slate-500 font-mono">
+                <th scope="col" className="py-2 pr-3 font-normal">Município</th>
+                <th scope="col" className="py-2 pr-3 font-normal">Região de saúde</th>
+                <th scope="col" className="py-2 pr-3 font-normal text-right">População</th>
+                <th scope="col" className="py-2 pr-3 font-normal text-right">Área (km²)</th>
+                <th scope="col" className="py-2 pr-3 font-normal text-right">Densidade (hab/km²)</th>
+                <th scope="col" className="py-2 font-normal text-right">{indicador.nome}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">

@@ -61,20 +61,20 @@ export function VisaoGeral({ onNavigate }: Props) {
             <button key={s.id} onClick={() => onNavigate(s.id)} className="text-left bg-white border border-slate-200 hover:border-blue-300 rounded-xl p-5 shadow-sm cursor-pointer space-y-2">
               <h3 className="font-semibold text-sm text-slate-900">{s.titulo}</h3>
               <p className="text-xs text-slate-500">{s.texto}</p>
-              <p className="text-[11px] flex items-center gap-1.5">
+              <p className="text-[0.75rem] flex items-center gap-1.5">
                 {s.fixo ? (
                   <><CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /><span className="text-slate-600">{s.fixo}</span></>
                 ) : s.aguarda ? (
-                  <><Clock className="h-3.5 w-3.5 text-slate-300" /><span className="text-slate-400">{s.aguarda}</span></>
+                  <><Clock className="h-3.5 w-3.5 text-slate-300" /><span className="text-slate-500">{s.aguarda}</span></>
                 ) : metas === null ? (
-                  <span className="text-slate-400">Verificando…</span>
+                  <span className="text-slate-500">Verificando…</span>
                 ) : meta ? (
                   <><CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /><span className="text-slate-600">{meta.fonte} · atualizado em {dataBR(meta.atualizadoEm)}</span></>
                 ) : (
-                  <><Clock className="h-3.5 w-3.5 text-slate-300" /><span className="text-slate-400">Aguardando dados da fonte</span></>
+                  <><Clock className="h-3.5 w-3.5 text-slate-300" /><span className="text-slate-500">Aguardando dados da fonte</span></>
                 )}
               </p>
-              <span className="text-[11px] font-semibold text-blue-600 inline-flex items-center gap-1">Abrir <ArrowRight className="h-3 w-3" /></span>
+              <span className="text-[0.75rem] font-semibold text-blue-600 inline-flex items-center gap-1">Abrir <ArrowRight className="h-3 w-3" /></span>
             </button>
           );
         })}
