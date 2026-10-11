@@ -11,6 +11,7 @@ import { PainelAcessibilidade } from "./components/PainelAcessibilidade";
 import { BuscaGeral } from "./components/BuscaGeral";
 import { ConsultaCmed } from "./components/ConsultaCmed";
 import { Metodologia } from "./components/Metodologia";
+import { DadosAbertos } from "./components/DadosAbertos";
 import type { Rota } from "./lib/busca";
 import { lerPerfil, type Perfil } from "./lib/perfis";
 import { EmElaboracao } from "./components/EmElaboracao";
@@ -31,6 +32,7 @@ import {
   Coins,
   Pill,
   BookText,
+  Download,
   ShieldCheck,
   Scale,
   BookOpen,
@@ -87,7 +89,7 @@ export default function App() {
 
   // Navegação superior: cada item abre uma área; "indicadores" mostra a barra lateral de módulos.
   type TopNavId = "inicio" | "indicadores" | "programas" | "educacao" | "impacto" | "producao" | "metodologia" | "admin";
-  const INDICADORES_SUBTABS = ["visao_geral", "comparador", "desabastecimento", "alertas", "cmed", "custos", "qualidade", "judicializacao", "ats_farmacovigilancia"];
+  const INDICADORES_SUBTABS = ["visao_geral", "comparador", "desabastecimento", "alertas", "cmed", "custos", "qualidade", "judicializacao", "ats_farmacovigilancia", "dados_abertos"];
   const isIndicadores = activeTab === "principal" && INDICADORES_SUBTABS.includes(activeRnSubTab);
   const topNav: { id: TopNavId; label: string; icon: any }[] = [
     { id: "inicio", label: "Início", icon: Home },
@@ -118,6 +120,7 @@ export default function App() {
     judicializacao: "Judicialização",
     qualidade: "Qualidade dos serviços",
     ats_farmacovigilancia: "Avaliação de tecnologias em saúde (ATS)",
+    dados_abertos: "Dados abertos",
     programas: "Programas Governamentais",
     repositorio: "Educação e Repositório",
     relatorio_impacto: "Relatório de impacto",
@@ -411,6 +414,7 @@ export default function App() {
                   { id: "judicializacao", label: "Judicialização", icon: Scale },
                   { id: "qualidade", label: "Qualidade dos serviços", icon: ShieldCheck },
                   { id: "ats_farmacovigilancia", label: "ATS", icon: RefreshCw },
+                  { id: "dados_abertos", label: "Dados abertos", icon: Download },
                 ].map((item) => (
                   <button
                     key={item.id}
@@ -448,6 +452,7 @@ export default function App() {
               {activeRnSubTab === "ats_farmacovigilancia" && (
                 <EmElaboracao titulo="Avaliação de tecnologias em saúde (ATS)" texto="As análises de ATS estão em organização com a equipe responsável e serão publicadas com fonte e data." />
               )}
+              {activeRnSubTab === "dados_abertos" && <DadosAbertos />}
               {activeRnSubTab === "programas" && <ProgramasGovernamentais />}
               {activeRnSubTab === "repositorio" && <Repositorio />}
               {activeRnSubTab === "metodologia" && <Metodologia />}
