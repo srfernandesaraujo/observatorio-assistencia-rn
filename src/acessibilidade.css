@@ -1,0 +1,91 @@
+/* Recursos de acessibilidade: foco visível, espaçamento de texto, redução de movimento, Libras e utilitários.
+   O modo de alto contraste fica em alto-contraste.css. */
+
+/* Foco sempre visível para quem navega pelo teclado (WCAG 2.4.7 / 2.4.11) */
+:focus-visible {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.alto-contraste :focus-visible {
+  outline-color: #ffd400;
+}
+
+/* "Pular para o conteúdo": só aparece quando recebe foco */
+.pular-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -4rem;
+  z-index: 100;
+  background: #1d4ed8;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.15s;
+}
+.pular-link:focus {
+  top: 0.5rem;
+}
+.alto-contraste .pular-link {
+  background: #ffd400;
+  color: #000000;
+}
+
+/* O alvo de "pular" recebe foco por script; não precisa de contorno */
+main:focus {
+  outline: none;
+}
+
+/* Alto contraste: links e botões de texto sublinhados; imagens sem filtros */
+.alto-contraste a,
+.alto-contraste button {
+  text-decoration-thickness: 2px;
+}
+.alto-contraste a {
+  text-decoration: underline;
+}
+
+/* Espaçamento de texto ampliado (valores do critério WCAG 1.4.12) */
+.espacamento-texto body,
+.espacamento-texto body * {
+  line-height: 1.5 !important;
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+}
+.espacamento-texto p {
+  margin-bottom: 2em;
+}
+
+/* Reduzir movimento: pelo sistema operacional ou pela escolha do usuário */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+.reduzir-movimento *,
+.reduzir-movimento *::before,
+.reduzir-movimento *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* VLibras: oculto quando o usuário desativa a tradução */
+.libras-desligado [vw] {
+  display: none !important;
+}
+
+/* Palavras longas quebram em vez de vazar do cartão quando o texto está grande ou espaçado */
+.espacamento-texto body *,
+html[style*="font-size: 150%"] body *,
+html[style*="font-size: 175%"] body * {
+  overflow-wrap: anywhere;
+}

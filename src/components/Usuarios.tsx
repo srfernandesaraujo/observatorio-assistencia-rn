@@ -130,7 +130,7 @@ export function Usuarios({ emailSuper }: Props) {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px] text-slate-600">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[0.75rem] text-slate-600">
           {(Object.keys(PAPEIS) as Papel[]).map((p) => (
             <p key={p} className="bg-slate-50 border border-slate-100 rounded-lg p-2">
               <strong className="text-slate-800">{PAPEIS[p].rotulo}:</strong> {PAPEIS[p].descricao}
@@ -178,7 +178,7 @@ export function Usuarios({ emailSuper }: Props) {
 
           <fieldset className="space-y-1.5">
             <legend className="text-xs font-semibold text-slate-700">Pode publicar dados de:</legend>
-            <p className="text-[11px] text-slate-500">Ao trocar o papel, as caixas voltam ao padrão do papel. Depois você pode ajustar caso a caso.</p>
+            <p className="text-[0.75rem] text-slate-500">Ao trocar o papel, as caixas voltam ao padrão do papel. Depois você pode ajustar caso a caso.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
               {PERMISSOES.map((p) => (
                 <label key={p.id} className="flex items-center gap-2 text-xs text-slate-700">
@@ -207,19 +207,19 @@ export function Usuarios({ emailSuper }: Props) {
       )}
 
       <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-        {usuarios === null && <p className="text-xs text-slate-400">Carregando…</p>}
+        {usuarios === null && <p className="text-xs text-slate-500">Carregando…</p>}
         {usuarios && usuarios.length === 0 && <p className="text-xs text-slate-500">Nenhum usuário cadastrado ainda.</p>}
         {usuarios && usuarios.length > 0 && (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Tabela de dados (use as setas para rolar)">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-100 text-slate-400 font-mono">
-                  <th className="py-2 pr-3 font-normal">Nome</th>
-                  <th className="py-2 pr-3 font-normal">E-mail</th>
-                  <th className="py-2 pr-3 font-normal">Papel</th>
-                  <th className="py-2 pr-3 font-normal">Pode publicar</th>
-                  <th className="py-2 pr-3 font-normal">Status</th>
-                  <th className="py-2 font-normal text-right">Ações</th>
+                <tr className="border-b border-slate-100 text-slate-500 font-mono">
+                  <th scope="col" className="py-2 pr-3 font-normal">Nome</th>
+                  <th scope="col" className="py-2 pr-3 font-normal">E-mail</th>
+                  <th scope="col" className="py-2 pr-3 font-normal">Papel</th>
+                  <th scope="col" className="py-2 pr-3 font-normal">Pode publicar</th>
+                  <th scope="col" className="py-2 pr-3 font-normal">Status</th>
+                  <th scope="col" className="py-2 font-normal text-right">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -232,7 +232,7 @@ export function Usuarios({ emailSuper }: Props) {
                       {PERMISSOES.filter((p) => u.permissoes?.[p.id]).map((p) => p.rotulo.split(" (")[0]).join(", ") || "—"}
                     </td>
                     <td className="py-2.5 pr-3">
-                      <button onClick={() => alternarAtivo(u)} className={`px-2 py-0.5 rounded text-[10px] font-bold border cursor-pointer ${u.ativo ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-slate-100 text-slate-500 border-slate-200"}`} title="Clique para alternar">
+                      <button onClick={() => alternarAtivo(u)} className={`px-2 py-0.5 rounded text-[0.75rem] font-bold border cursor-pointer ${u.ativo ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-slate-100 text-slate-500 border-slate-200"}`} title="Clique para alternar">
                         {u.ativo ? "Ativo" : "Inativo"}
                       </button>
                     </td>

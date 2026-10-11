@@ -53,7 +53,7 @@ export function Repositorio() {
         {meta && <SeloFonte meta={meta} />}
       </div>
 
-      {estado === "carregando" && <p className="text-xs text-slate-400">Carregando…</p>}
+      {estado === "carregando" && <p className="text-xs text-slate-500">Carregando…</p>}
       {estado === "erro" && <p className="text-xs text-red-600">Não foi possível carregar o repositório agora.</p>}
       {estado === "vazio" && (
         <p className="text-sm text-slate-500 bg-white border border-slate-200 rounded-xl p-6">Aguardando documentos. O repositório será preenchido pela equipe do observatório, sempre com link para a fonte oficial.</p>
@@ -63,7 +63,7 @@ export function Repositorio() {
         <>
           <div className="flex flex-col md:flex-row gap-3">
             <label className="relative flex-1">
-              <Search className="h-4 w-4 text-slate-400 absolute left-3 top-2.5" />
+              <Search className="h-4 w-4 text-slate-500 absolute left-3 top-2.5" />
               <input
                 value={busca}
                 onChange={(e) => setBusca(e.target.value)}
@@ -85,15 +85,15 @@ export function Repositorio() {
             {visiveis.map((d, i) => (
               <article key={i} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-1.5">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border bg-slate-50 text-slate-600 border-slate-200">{String(d.tipo)}</span>
-                  {d.data_publicacao ? <span className="text-[11px] text-slate-400 font-mono">{dataBR(d.data_publicacao)}</span> : null}
+                  <span className="text-[0.75rem] font-mono font-bold px-2 py-0.5 rounded border bg-slate-50 text-slate-600 border-slate-200">{String(d.tipo)}</span>
+                  {d.data_publicacao ? <span className="text-[0.75rem] text-slate-500 font-mono">{dataBR(d.data_publicacao)}</span> : null}
                 </div>
                 <h3 className="font-semibold text-sm text-slate-900">{String(d.titulo)}</h3>
-                <p className="text-[11px] text-slate-500">{String(d.orgao)}</p>
+                <p className="text-[0.75rem] text-slate-500">{String(d.orgao)}</p>
                 {d.resumo ? <p className="text-xs text-slate-700">{String(d.resumo)}</p> : null}
                 {/^https?:\/\//i.test(String(d.link)) && (
-                  <a href={String(d.link)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:underline">
-                    Ver documento oficial <ExternalLink className="h-3 w-3" />
+                  <a href={String(d.link)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[0.75rem] font-semibold text-blue-600 hover:underline">
+                    Ver documento oficial <ExternalLink className="h-3 w-3" aria-hidden="true" /><span className="sr-only"> (abre em nova aba)</span>
                   </a>
                 )}
               </article>

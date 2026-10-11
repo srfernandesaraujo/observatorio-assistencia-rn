@@ -104,7 +104,7 @@ export function Landing({ onNavigate }: Props) {
     <div className="space-y-10">
       {/* Abertura */}
       <section className="bg-gradient-to-br from-blue-700 to-blue-900 text-white rounded-2xl p-8 md:p-10 shadow-sm">
-        <p className="text-[11px] font-mono uppercase tracking-wider text-blue-200 font-bold">Rio Grande do Norte</p>
+        <p className="text-[0.75rem] font-mono uppercase tracking-wider text-blue-200 font-bold">Rio Grande do Norte</p>
         <h2 className="font-display font-bold text-3xl md:text-4xl mt-2 max-w-3xl">Observatório da Assistência Farmacêutica</h2>
         <p className="text-sm md:text-base text-blue-100 mt-3 max-w-3xl leading-relaxed">
           Transparência de dados sobre o acesso a medicamentos no estado, para cidadãos, profissionais de saúde e gestores. Cada informação mostra sua fonte e a data de atualização.
@@ -139,9 +139,9 @@ export function Landing({ onNavigate }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {alertas.map((a, i) => (
               <button key={i} onClick={() => onNavigate("alertas")} className="text-left bg-white border border-red-100 hover:border-red-300 rounded-xl p-4 shadow-sm cursor-pointer space-y-1">
-                <p className="text-[10px] font-mono text-slate-400">{dataBR(String(a.data))} · {String(a.tipo)}</p>
+                <p className="text-[0.75rem] font-mono text-slate-500">{dataBR(String(a.data))} · {String(a.tipo)}</p>
                 <p className="text-sm font-semibold text-slate-900">{String(a.produto)}</p>
-                <p className="text-xs text-slate-600 line-clamp-2">{String(a.motivo)}</p>
+                <p className="text-xs text-slate-600">{String(a.motivo)}</p>
               </button>
             ))}
           </div>
@@ -189,7 +189,7 @@ export function Landing({ onNavigate }: Props) {
                 {meta ? <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" /> : <Clock className="h-4 w-4 text-slate-300 shrink-0 mt-0.5" />}
                 <span className="text-slate-700">
                   <strong className="font-medium">{t.titulo}</strong>
-                  <span className="block text-slate-400">
+                  <span className="block text-slate-500">
                     {metas === null ? "Verificando…" : meta ? `${meta.fonte} · atualizado em ${dataBR(meta.atualizadoEm)}` : "Aguardando dados da fonte"}
                   </span>
                 </span>
@@ -197,7 +197,7 @@ export function Landing({ onNavigate }: Props) {
             );
           })}
         </ul>
-        <p className="text-[11px] text-slate-400">
+        <p className="text-[0.75rem] text-slate-500">
           Demografia: {FONTE_IBGE.rotulo}. O observatório não exibe dados de exemplo: onde a fonte ainda não enviou informações, a seção informa que está aguardando.
         </p>
       </section>
@@ -208,9 +208,9 @@ export function Landing({ onNavigate }: Props) {
 function Numero({ rotulo, valor, nota }: { rotulo: string; valor: string; nota: string }) {
   return (
     <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-      <p className="text-[11px] text-slate-500">{rotulo}</p>
+      <p className="text-[0.75rem] text-slate-500">{rotulo}</p>
       <p className="font-display font-bold text-2xl text-slate-900 mt-0.5">{valor}</p>
-      <p className="text-[10px] text-slate-400 mt-0.5">{nota}</p>
+      <p className="text-[0.75rem] text-slate-500 mt-0.5">{nota}</p>
     </div>
   );
 }

@@ -54,7 +54,7 @@ export function AlertasSanitarios() {
         {meta && <SeloFonte meta={meta} />}
       </div>
 
-      {estado === "carregando" && <p className="text-xs text-slate-400">Carregando…</p>}
+      {estado === "carregando" && <p className="text-xs text-slate-500">Carregando…</p>}
       {estado === "erro" && <p className="text-xs text-red-600">Não foi possível carregar os alertas agora.</p>}
       {estado === "vazio" && (
         <p className="text-sm text-slate-500 bg-white border border-slate-200 rounded-xl p-6">Aguardando alertas. Esta seção será preenchida pela equipe do observatório.</p>
@@ -77,17 +77,17 @@ export function AlertasSanitarios() {
             {visiveis.map((a, i) => (
               <article key={i} className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-2">
                 <div className="flex items-center justify-between gap-2">
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${COR_TIPO[String(a.tipo)] ?? COR_TIPO.Outro}`}>{String(a.tipo)}</span>
-                  <span className="text-[11px] text-slate-400 font-mono">{dataBR(a.data)}</span>
+                  <span className={`text-[0.75rem] font-mono font-bold px-2 py-0.5 rounded border ${COR_TIPO[String(a.tipo)] ?? COR_TIPO.Outro}`}>{String(a.tipo)}</span>
+                  <span className="text-[0.75rem] text-slate-500 font-mono">{dataBR(a.data)}</span>
                 </div>
                 <h3 className="font-semibold text-sm text-slate-900">{String(a.produto)}</h3>
-                {a.empresa ? <p className="text-[11px] text-slate-500">Empresa: {String(a.empresa)}</p> : null}
+                {a.empresa ? <p className="text-[0.75rem] text-slate-500">Empresa: {String(a.empresa)}</p> : null}
                 <p className="text-xs text-slate-700">{String(a.motivo)}</p>
-                <p className="text-[11px] text-slate-600">
+                <p className="text-[0.75rem] text-slate-600">
                   <strong>Lotes:</strong> {a.lotes ? String(a.lotes) : "todos os lotes ou conforme a fonte"}
                 </p>
-                {/^https?:\/\//i.test(String(a.link)) && <a href={String(a.link)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:underline">
-                  Ver fonte oficial <ExternalLink className="h-3 w-3" />
+                {/^https?:\/\//i.test(String(a.link)) && <a href={String(a.link)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[0.75rem] font-semibold text-blue-600 hover:underline">
+                  Ver fonte oficial <ExternalLink className="h-3 w-3" aria-hidden="true" /><span className="sr-only"> (abre em nova aba)</span>
                 </a>}
               </article>
             ))}
