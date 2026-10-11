@@ -26,7 +26,8 @@ for (const viewport of [{ width: 1366, height: 900 }, { width: 390, height: 800 
   ok(await p.getByText(/Arquivo da Anvisa de \d{2}\/\d{2}\/\d{4}/).isVisible(), `${rotulo}: data do arquivo na fonte`);
 
   await p.selectOption("#cmed-tipo", "Similar");
-  await p.waitForTimeout(1500);
+  // espera a tabela refeita com o filtro (o tempo da resposta varia)
+  await p.waitForFunction(() => { const c = [...document.querySelectorAll("table tbody tr td:nth-child(4)")]; return c.length > 0 && c.every((x) => x.textContent.trim() === "Similar"); }, null, { timeout: 20000 }).catch(() => {});
   const tipos = await p.locator("table tbody tr td:nth-child(4)").allTextContents();
   ok(tipos.length > 0 && tipos.every((t) => t.trim() === "Similar"), `${rotulo}: filtro por tipo (${new Set(tipos).size} tipo(s))`);
   await p.selectOption("#cmed-tipo", "");

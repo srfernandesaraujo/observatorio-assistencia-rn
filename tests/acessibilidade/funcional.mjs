@@ -1,3 +1,5 @@
+// Rode contra um build (site publicado ou npx vite preview), não contra o servidor de desenvolvimento (npm run dev):
+// nele, 2 verificações de foco (primeiro Tab e foco após navegar) falham mesmo com o código antigo; num build passam.
 import { chromium } from "playwright";
 
 const base = process.argv[2] || "http://localhost:4173/";
