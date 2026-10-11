@@ -31,6 +31,7 @@ const SECOES: { titulo: string; trecho: string; rota: Rota; palavras: string }[]
   { titulo: "Comparador territorial", trecho: "Compare municípios e regiões de saúde do RN.", rota: { aba: "principal", sub: "comparador" }, palavras: "municipio cidade regiao populacao ibge" },
   { titulo: "Desabastecimento e pregões", trecho: "Medicamentos em falta e acompanhamento de compras.", rota: { aba: "principal", sub: "desabastecimento" }, palavras: "falta estoque compra licitacao pregao cesap" },
   { titulo: "Alertas sanitários", trecho: "Recolhimentos, suspensões e proibições da Anvisa.", rota: { aba: "principal", sub: "alertas" }, palavras: "anvisa recolhimento lote seguranca" },
+  { titulo: "Preços de medicamentos (CMED)", trecho: "Consulta do preço máximo de medicamentos, da tabela da CMED/Anvisa.", rota: { aba: "principal", sub: "cmed" }, palavras: "cmed preco pf pmc teto valor medicamento custo tabela anvisa" },
   { titulo: "Custos e orçamento", trecho: "Gasto anual por componente da assistência farmacêutica.", rota: { aba: "principal", sub: "custos" }, palavras: "gasto dinheiro financiamento valor" },
   { titulo: "Judicialização", trecho: "Processos de saúde concluídos por ano.", rota: { aba: "principal", sub: "judicializacao" }, palavras: "justica processo judicial cnj" },
   { titulo: "Qualidade dos serviços", trecho: "Instrumentos de qualidade da SUAF (em elaboração).", rota: { aba: "principal", sub: "qualidade" }, palavras: "suaf acreditacao" },
