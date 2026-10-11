@@ -100,7 +100,7 @@ export function AssistenteChat({ aberto, aoAbrir, aoFechar }: Props) {
   };
 
   return (
-    <aside aria-label="Assistente do Observatório">
+    <aside aria-label="Assistente do Observatório" className="print:hidden">
       <button
         ref={botaoRef}
         onClick={aoAbrir}

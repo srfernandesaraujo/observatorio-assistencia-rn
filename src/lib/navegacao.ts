@@ -5,7 +5,7 @@ import type { Destino } from "../components/Landing";
 // o item em MenuIndicadores.tsx, a tela em AreaPrincipal.tsx e a entrada na busca (lib/busca.ts).
 
 export type Aba = "inicio" | "principal" | "producao" | "configuracoes";
-export type TopNavId = "inicio" | "indicadores" | "programas" | "educacao" | "impacto" | "producao" | "metodologia" | "admin";
+export type TopNavId = "inicio" | "como_usar" | "indicadores" | "programas" | "educacao" | "impacto" | "producao" | "metodologia" | "admin";
 
 export interface Local {
   aba: Aba;
@@ -45,7 +45,11 @@ export const NOMES_SUB: Record<string, string> = {
   repositorio: "Educação e Repositório",
   relatorio_impacto: "Relatório de impacto",
   metodologia: "Metodologia e glossário",
+  como_usar: "Como usar",
 };
+
+// Endereço próprio do guia "Como usar" (o site não tem rotas; o App lê e atualiza só este caminho).
+export const CAMINHO_COMO_USAR = "/como-usar";
 
 export const TITULO_SITE = "Observatório da Assistência Farmacêutica do RN";
 
@@ -62,6 +66,7 @@ export function topNavAtual(aba: Aba, sub: string): TopNavId {
   if (sub === "programas") return "programas";
   if (sub === "repositorio") return "educacao";
   if (sub === "metodologia") return "metodologia";
+  if (sub === "como_usar") return "como_usar";
   return "impacto";
 }
 
@@ -78,7 +83,7 @@ export function localDoMenuSuperior(id: TopNavId): Local {
   if (id === "inicio") return { aba: "inicio" };
   if (id === "producao") return { aba: "producao" };
   if (id === "admin") return { aba: "configuracoes" };
-  const sub = id === "indicadores" ? SECAO_INICIAL : id === "programas" ? "programas" : id === "educacao" ? "repositorio" : id === "metodologia" ? "metodologia" : "relatorio_impacto";
+  const sub = id === "indicadores" ? SECAO_INICIAL : id === "programas" ? "programas" : id === "educacao" ? "repositorio" : id === "metodologia" ? "metodologia" : id === "como_usar" ? "como_usar" : "relatorio_impacto";
   return { aba: "principal", sub };
 }
 
