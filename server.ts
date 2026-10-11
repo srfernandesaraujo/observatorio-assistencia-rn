@@ -3,6 +3,7 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import { contextoDosDados } from "./server/dadosPublicos.ts";
+import { buscarCmed } from "./server/cmed.ts";
 
 // --- LIMITES DO ENDPOINT DE IA (protegem a cota e o custo da chave Gemini) ---
 // Contadores em memória: valem por instância do Cloud Run (máx. 2 instâncias).
@@ -45,6 +46,24 @@ setInterval(() => {
   }
 }, 60 * 60 * 1000).unref();
 
+// --- LIMITE DA CONSULTA CMED (leitura pública; protege o servidor de excesso de chamadas) ---
+const CMED_POR_MINUTO = 30;
+const cmedHits = new Map<string, number[]>();
+function cmedExcedeu(ip: string): boolean {
+  const now = Date.now();
+  const hits = (cmedHits.get(ip) || []).filter((t) => now - t < 60 * 1000);
+  if (hits.length >= CMED_POR_MINUTO) return true;
+  hits.push(now);
+  cmedHits.set(ip, hits);
+  return false;
+}
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, hits] of cmedHits) {
+    if (hits.every((t) => now - t >= 60 * 1000)) cmedHits.delete(ip);
+  }
+}, 5 * 60 * 1000).unref();
+
 async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
@@ -59,6 +78,25 @@ async function startServer() {
   // 1. Healthcheck
   app.get("/api/health", (req, res) => {
     res.json({ status: "healthy", timestamp: new Date().toISOString() });
+  });
+
+  // Consulta de preços CMED (Anvisa): GET /api/cmed?q=losartana&tipo=Genérico
+  app.get("/api/cmed", async (req, res) => {
+    const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
+    const tipo = typeof req.query.tipo === "string" ? req.query.tipo.trim().slice(0, 40) : "";
+    if (q.length < 3 || q.length > 80) {
+      return res.status(400).json({ erro: "Digite de 3 a 80 caracteres para buscar." });
+    }
+    if (cmedExcedeu(req.ip || "desconhecido")) {
+      return res.status(429).json({ erro: "Muitas consultas em pouco tempo. Aguarde um minuto e tente de novo." });
+    }
+    try {
+      res.set("Cache-Control", "no-store");
+      res.json(await buscarCmed(q, tipo));
+    } catch (e: any) {
+      console.error("[CMED] falha:", e?.message);
+      res.status(503).json({ erro: "Não foi possível consultar a tabela da CMED agora. Tente novamente em instantes." });
+    }
   });
 
   // 7. Rota de Inteligência Artificial para Consulta em Linguagem Natural
