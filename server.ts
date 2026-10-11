@@ -4,6 +4,7 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import { contextoDosDados } from "./server/dadosPublicos.ts";
 import { buscarCmed } from "./server/cmed.ts";
+import { buscarRegistros } from "./server/registros.ts";
 
 // --- LIMITES DO ENDPOINT DE IA (protegem a cota e o custo da chave Gemini) ---
 // Contadores em memória: valem por instância do Cloud Run (máx. 2 instâncias).
@@ -46,21 +47,21 @@ setInterval(() => {
   }
 }, 60 * 60 * 1000).unref();
 
-// --- LIMITE DA CONSULTA CMED (leitura pública; protege o servidor de excesso de chamadas) ---
-const CMED_POR_MINUTO = 30;
-const cmedHits = new Map<string, number[]>();
-function cmedExcedeu(ip: string): boolean {
+// --- LIMITE DAS CONSULTAS À ANVISA (CMED e registros; leitura pública; protege o servidor de excesso de chamadas) ---
+const CONSULTAS_POR_MINUTO = 30;
+const consultaHits = new Map<string, number[]>();
+function consultaExcedeu(ip: string): boolean {
   const now = Date.now();
-  const hits = (cmedHits.get(ip) || []).filter((t) => now - t < 60 * 1000);
-  if (hits.length >= CMED_POR_MINUTO) return true;
+  const hits = (consultaHits.get(ip) || []).filter((t) => now - t < 60 * 1000);
+  if (hits.length >= CONSULTAS_POR_MINUTO) return true;
   hits.push(now);
-  cmedHits.set(ip, hits);
+  consultaHits.set(ip, hits);
   return false;
 }
 setInterval(() => {
   const now = Date.now();
-  for (const [ip, hits] of cmedHits) {
-    if (hits.every((t) => now - t >= 60 * 1000)) cmedHits.delete(ip);
+  for (const [ip, hits] of consultaHits) {
+    if (hits.every((t) => now - t >= 60 * 1000)) consultaHits.delete(ip);
   }
 }, 5 * 60 * 1000).unref();
 
@@ -87,7 +88,7 @@ async function startServer() {
     if (q.length < 3 || q.length > 80) {
       return res.status(400).json({ erro: "Digite de 3 a 80 caracteres para buscar." });
     }
-    if (cmedExcedeu(req.ip || "desconhecido")) {
+    if (consultaExcedeu(req.ip || "desconhecido")) {
       return res.status(429).json({ erro: "Muitas consultas em pouco tempo. Aguarde um minuto e tente de novo." });
     }
     try {
@@ -96,6 +97,26 @@ async function startServer() {
     } catch (e: any) {
       console.error("[CMED] falha:", e?.message);
       res.status(503).json({ erro: "Não foi possível consultar a tabela da CMED agora. Tente novamente em instantes." });
+    }
+  });
+
+  // Registros de medicamentos (Anvisa): GET /api/registros?q=losartana&situacao=Ativo&categoria=Genérico
+  app.get("/api/registros", async (req, res) => {
+    const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
+    const situacao = typeof req.query.situacao === "string" ? req.query.situacao.trim().slice(0, 20) : "";
+    const categoria = typeof req.query.categoria === "string" ? req.query.categoria.trim().slice(0, 40) : "";
+    if (q.length < 3 || q.length > 80) {
+      return res.status(400).json({ erro: "Digite de 3 a 80 caracteres para buscar." });
+    }
+    if (consultaExcedeu(req.ip || "desconhecido")) {
+      return res.status(429).json({ erro: "Muitas consultas em pouco tempo. Aguarde um minuto e tente de novo." });
+    }
+    try {
+      res.set("Cache-Control", "no-store");
+      res.json(await buscarRegistros(q, situacao, categoria));
+    } catch (e: any) {
+      console.error("[Registros] falha:", e?.message);
+      res.status(503).json({ erro: "Não foi possível consultar os registros da Anvisa agora. Tente novamente em instantes." });
     }
   });
 

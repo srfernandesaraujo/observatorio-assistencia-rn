@@ -22,6 +22,12 @@ export const FONTES: FonteDados[] = [
     atualizacao: "Relido no máximo a cada 12 horas. A tela mostra a data do arquivo na Anvisa.",
   },
   {
+    secao: "Registros de medicamentos (Anvisa)",
+    fonte: "Anvisa, Portal de Dados Abertos (produtos registrados, medicamentos)",
+    comoChega: "Coleta automática: o servidor do Observatório lê o arquivo da Anvisa, reúne as linhas repetidas de cada registro e guarda o resultado em memória.",
+    atualizacao: "Relido no máximo a cada 24 horas; a Anvisa atualiza o arquivo uma vez por mês. A tela mostra a data do arquivo.",
+  },
+  {
     secao: "Alertas sanitários",
     fonte: "Anvisa (notícias e resoluções oficiais)",
     comoChega: "Planilha preparada pela equipe, sempre com o link da notícia ou resolução oficial. Não encontramos uma API da Anvisa para alertas.",
@@ -82,6 +88,7 @@ export const GLOSSARIO: Termo[] = [
   { termo: "PF (Preço de Fábrica)", definicao: "Preço máximo que o fabricante pode cobrar de farmácias e distribuidores por um medicamento, segundo a CMED." },
   { termo: "PMC (Preço Máximo ao Consumidor)", definicao: "Preço máximo que as farmácias podem cobrar do público por um medicamento, segundo a CMED." },
   { termo: "Pregão", definicao: "Modalidade de licitação para comprar bens e serviços comuns, em que os fornecedores disputam o menor preço. Usada por órgãos públicos para comprar medicamentos." },
+  { termo: "Registro (de medicamento)", definicao: "Autorização da Anvisa, dada antes da comercialização e publicada no Diário Oficial da União, que reconhece que o produto atende à lei. Cada registro tem um número e uma data de vencimento. Ter registro não significa que o medicamento esteja disponível no SUS ou em estoque." },
   { termo: "Princípio ativo", definicao: "Substância responsável pelo efeito terapêutico de um medicamento." },
   { termo: "Recolhimento, suspensão e proibição", definicao: "Tipos de alerta sanitário. Recolhimento é a retirada do mercado de lotes de um produto; suspensão interrompe temporariamente a distribuição, a venda ou o uso; proibição impede a fabricação, a venda ou o uso." },
   { termo: "Região de saúde", definicao: "Conjunto de municípios vizinhos, agrupados para organizar, planejar e executar ações e serviços de saúde. No RN, o vínculo oficial de cada município com sua região de saúde é informado pela SESAP-RN." },

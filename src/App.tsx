@@ -10,6 +10,7 @@ import { TabelaDataset } from "./components/TabelaDataset";
 import { PainelAcessibilidade } from "./components/PainelAcessibilidade";
 import { BuscaGeral } from "./components/BuscaGeral";
 import { ConsultaCmed } from "./components/ConsultaCmed";
+import { RegistrosMedicamentos } from "./components/RegistrosMedicamentos";
 import { Metodologia } from "./components/Metodologia";
 import { DadosAbertos } from "./components/DadosAbertos";
 import type { Rota } from "./lib/busca";
@@ -33,6 +34,7 @@ import {
   Pill,
   BookText,
   Download,
+  FileCheck,
   ShieldCheck,
   Scale,
   BookOpen,
@@ -89,7 +91,7 @@ export default function App() {
 
   // Navegação superior: cada item abre uma área; "indicadores" mostra a barra lateral de módulos.
   type TopNavId = "inicio" | "indicadores" | "programas" | "educacao" | "impacto" | "producao" | "metodologia" | "admin";
-  const INDICADORES_SUBTABS = ["visao_geral", "comparador", "desabastecimento", "alertas", "cmed", "custos", "qualidade", "judicializacao", "ats_farmacovigilancia", "dados_abertos"];
+  const INDICADORES_SUBTABS = ["visao_geral", "comparador", "desabastecimento", "alertas", "cmed", "registros", "custos", "qualidade", "judicializacao", "ats_farmacovigilancia", "dados_abertos"];
   const isIndicadores = activeTab === "principal" && INDICADORES_SUBTABS.includes(activeRnSubTab);
   const topNav: { id: TopNavId; label: string; icon: any }[] = [
     { id: "inicio", label: "Início", icon: Home },
@@ -116,6 +118,7 @@ export default function App() {
     desabastecimento: "Desabastecimento e pregões",
     alertas: "Alertas sanitários",
     cmed: "Consulta de preços (CMED)",
+    registros: "Registros de medicamentos (Anvisa)",
     custos: "Custos e orçamento",
     judicializacao: "Judicialização",
     qualidade: "Qualidade dos serviços",
@@ -410,6 +413,7 @@ export default function App() {
                   { id: "desabastecimento", label: "Desabastecimento e pregões", icon: AlertTriangle },
                   { id: "alertas", label: "Alertas sanitários", icon: ShieldAlert },
                   { id: "cmed", label: "Preços de medicamentos (CMED)", icon: Pill },
+                  { id: "registros", label: "Registros de medicamentos (Anvisa)", icon: FileCheck },
                   { id: "custos", label: "Custos e orçamento", icon: Coins },
                   { id: "judicializacao", label: "Judicialização", icon: Scale },
                   { id: "qualidade", label: "Qualidade dos serviços", icon: ShieldCheck },
@@ -444,6 +448,7 @@ export default function App() {
               )}
               {activeRnSubTab === "alertas" && <AlertasSanitarios />}
               {activeRnSubTab === "cmed" && <ConsultaCmed />}
+              {activeRnSubTab === "registros" && <RegistrosMedicamentos />}
               {activeRnSubTab === "custos" && <TabelaDataset templateId="custos" />}
               {activeRnSubTab === "judicializacao" && <Judicializacao />}
               {activeRnSubTab === "qualidade" && (
