@@ -37,6 +37,7 @@ const SECOES: { titulo: string; trecho: string; rota: Rota; palavras: string }[]
   { titulo: "Judicialização", trecho: "Processos de saúde concluídos por ano.", rota: { aba: "principal", sub: "judicializacao" }, palavras: "justica processo judicial cnj" },
   { titulo: "Qualidade dos serviços", trecho: "Instrumentos de qualidade da SUAF (em elaboração).", rota: { aba: "principal", sub: "qualidade" }, palavras: "suaf acreditacao" },
   { titulo: "Avaliação de tecnologias em saúde (ATS)", trecho: "Análises de ATS (em elaboração).", rota: { aba: "principal", sub: "ats_farmacovigilancia" }, palavras: "ats incorporacao conitec" },
+  { titulo: "Dados abertos", trecho: "Baixe em CSV ou JSON os conjuntos de dados publicados pelo Observatório.", rota: { aba: "principal", sub: "dados_abertos" }, palavras: "baixar download csv json planilha arquivo reutilizar api" },
   { titulo: "Programas Governamentais", trecho: "Como obter medicamentos pelo SUS e programas do governo.", rota: { aba: "principal", sub: "programas" }, palavras: "sus acesso obter remedio" },
   { titulo: "Educação e Repositório", trecho: "Documentos oficiais, protocolos e materiais educativos.", rota: { aba: "principal", sub: "repositorio" }, palavras: "documento pcdt protocolo legislacao nota tecnica" },
   { titulo: "Relatório de impacto", trecho: "Relatório de impacto (em elaboração).", rota: { aba: "principal", sub: "relatorio_impacto" }, palavras: "impacto resultado" },

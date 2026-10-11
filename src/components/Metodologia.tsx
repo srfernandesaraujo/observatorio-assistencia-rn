@@ -88,6 +88,7 @@ export function Metodologia() {
           <li><strong>Selo de fonte.</strong> Cada tabela traz a fonte, o período a que o dado se refere (quando informado), a data de atualização e se a coleta é automática ou por planilha. “Atualizado em” é a data em que o dado foi publicado no Observatório, que pode ser posterior à data do fato.</li>
           <li><strong>Planilhas são conferidas antes de publicar.</strong> O sistema verifica campos obrigatórios, números, datas, nomes oficiais de município (lista do IBGE) e se os links começam com http ou https. Se houver erro, nada é publicado. Uma nova publicação substitui o conjunto anterior.</li>
           <li><strong>Valores por 10 mil habitantes.</strong> No Comparador territorial, indicadores que são contagens podem ser mostrados por 10 mil habitantes, dividindo o valor do município pela população do Censo 2022 do IBGE e multiplicando por 10 mil. Isso permite comparar municípios de tamanhos diferentes.</li>
+          <li><strong>Dados abertos.</strong> Os conjuntos publicados podem ser baixados em CSV ou JSON na seção Dados abertos, de Indicadores. Ao reutilizar, cite a fonte original de cada conjunto.</li>
           <li><strong>Preços da CMED.</strong> São preços máximos regulados, por apresentação do medicamento, e não os preços efetivamente praticados. Mostramos o preço de fábrica (PF) sem impostos e com ICMS 0%, e o preço máximo ao consumidor (PMC) com ICMS 0%. A tabela completa, com outras alíquotas de ICMS, está na fonte oficial.</li>
         </ul>
       </section>
