@@ -1,5 +1,5 @@
 import type { User as UsuarioFirebase } from "firebase/auth";
-import { Layers, Home, Activity, FileText, Calendar, User, Heart, Map, Settings, BookOpen, BookText, Key, type LucideIcon } from "lucide-react";
+import { Layers, Home, Compass, Activity, FileText, Calendar, User, Heart, Map, Settings, BookOpen, BookText, Key, type LucideIcon } from "lucide-react";
 import { BuscaGeral } from "./BuscaGeral";
 import { PainelAcessibilidade } from "./PainelAcessibilidade";
 import type { Rota } from "../lib/busca";
@@ -7,6 +7,7 @@ import type { TopNavId } from "../lib/navegacao";
 
 const ITENS_MENU: { id: TopNavId; label: string; icon: LucideIcon }[] = [
   { id: "inicio", label: "Início", icon: Home },
+  { id: "como_usar", label: "Como usar", icon: Compass },
   { id: "indicadores", label: "Indicadores", icon: Activity },
   { id: "programas", label: "Programas Governamentais", icon: Map },
   { id: "educacao", label: "Educação e Repositório", icon: BookOpen },
@@ -29,7 +30,7 @@ interface Props {
 export function Cabecalho({ usuario, menuAtual, aoEscolherMenu, aoBuscar, aoEntrar, aoSair }: Props) {
   const itens = usuario ? [...ITENS_MENU, ITEM_ADMIN] : ITENS_MENU;
   return (
-    <div className="lg:sticky lg:top-0 z-40">
+    <div className="lg:sticky lg:top-0 z-40 print:hidden">
       {/* HEADER / BRAND AREA */}
       <header className="border-b border-slate-200 bg-white px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
         <div className="flex items-center gap-3 min-w-0 max-w-full">

@@ -2,6 +2,7 @@ import type { User as UsuarioFirebase } from "firebase/auth";
 import { Admin } from "./Admin";
 import { AlertasSanitarios } from "./AlertasSanitarios";
 import { Comparador } from "./Comparador";
+import { ComoUsar } from "./ComoUsar";
 import { ConsultaCmed } from "./ConsultaCmed";
 import { DadosAbertos } from "./DadosAbertos";
 import { EmElaboracao } from "./EmElaboracao";
@@ -66,6 +67,7 @@ export function AreaPrincipal({ aba, sub, usuario, perfil, aoAbrirAtalho, aoMuda
             {sub === "programas" && <ProgramasGovernamentais />}
             {sub === "repositorio" && <Repositorio />}
             {sub === "metodologia" && <Metodologia />}
+            {sub === "como_usar" && <ComoUsar />}
             {sub === "relatorio_impacto" && (
               <EmElaboracao titulo="Relatório de impacto" texto="O relatório de impacto será elaborado com dados verificados e metodologia aberta." />
             )}
